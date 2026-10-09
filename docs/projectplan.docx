@@ -1,0 +1,103 @@
+DOGTRAINER HUB
+Abschlussprojekt – Projektplan
+
+1. DIE IDEE
+
+Ich will eine Webapp für Hundetraining machen. Es geht nicht darum, einfach nur eine Liste mit Tricks zu haben. Man soll Hunde anlegen, Übungen suchen, nachschauen wie ein Trick funktioniert und sein Training dokumentieren können.
+
+Ich komme selbst aus dem Hundetraining und will das auch im Projekt verwenden. Vor allem Frisbee, Agility und normales Alltagstraining. Es sollen aber auch Übungen aus Seminaren und von anderen Trainern Platz haben. Die App soll nicht kompliziert werden. Man soll sich anmelden und die Sachen schnell finden, die man gerade braucht.
+
+2. BENUTZER
+
+Die App ist für Hundetrainer, Hundebesitzer und auch Leute gedacht, die gemeinsam mit Freunden trainieren. Es gibt unterschiedliche Benutzerrollen. Trainer können Trainingsinhalte verwalten, normale Benutzer können Übungen suchen und mit ihren Hunden arbeiten.
+
+Dafür brauche ich Registrierung, Login und eine Verifizierung. Benutzer sollen ihre Daten nicht jedes Mal neu eingeben müssen. Deshalb gehören Sessions bzw. Cookies auch dazu. Passwörter werden natürlich nicht im Klartext gespeichert.
+
+3. HUNDE UND TRAINING
+
+Jeder Hund bekommt ein eigenes Profil. Dort sollen die wichtigsten Informationen stehen und man soll eintragen können, welche Tricks er schon kann, was trainiert wurde und was funktioniert hat.
+
+Bei den Übungen brauche ich einen Namen, eine Kategorie, einen Schwierigkeitsgrad und eine Beschreibung. Bilder und Videos gehören auch dazu, damit man nicht nur einen Text vor sich hat.
+
+Die Tricks sollen aufeinander aufbauen. Dafür bekommt jeder Trick bestimmte Voraussetzungen, also Requirements. Ein Trick wird für den jeweiligen Hund erst freigeschaltet, wenn er die benötigten Grundlagen oder vorherigen Tricks beherrscht und diese im Hundeprofil als gekonnt eingetragen sind. Erst dann kann man den neuen Trick zum Training auswählen und den Fortschritt dokumentieren. Die Freischaltung gilt für jeden Hund einzeln.
+
+Für Anfänger gibt es einen How-to-Basic-Bereich mit den Grundlagen. Übungen ohne Voraussetzungen sind von Anfang an verfügbar. Sobald die Voraussetzungen für einen weiteren Trick erfüllt sind, wird dieser freigeschaltet. So arbeitet man sich Schritt für Schritt von den Grundlagen zu schwierigeren Übungen weiter.
+
+Die Trainingsdokumentation ist mir wichtig. Ich will nicht nur anzeigen, welche Übungen es gibt, sondern auch festhalten, was man mit welchem Hund gemacht hat und welche Erfolge es gab.
+
+4. SUCHE UND INHALTE
+
+Es braucht eine Suchfunktion, damit man einen bestimmten Trick direkt findet. In der Suche können auch gesperrte Tricks angezeigt werden. Beim ausgewählten Hund sieht man, ob der Trick bereits freigeschaltet ist und welche Voraussetzungen noch fehlen. Zum Training auswählen kann man ihn erst, wenn alle benötigten Requirements erfüllt sind. Die Übungen werden außerdem in Bereiche eingeteilt, zum Beispiel:
+
+- Frisbee
+- Agility
+- Alltagstraining
+- Grundlagen / How-to-Basic
+- Übungen aus Seminaren und von Trainern
+
+Bei einer Übung soll man sehen, wie man anfängt, was man beachten muss und wie der weitere Aufbau funktioniert. Dazu kommen Tipps, Bilder und Trainingsvideos.
+
+Benutzer sollen auch Inhalte hochladen können. Für Bilder und Videos brauche ich daher eine Upload-Funktion mit Dateiprüfung und passenden Berechtigungen.
+
+Zusätzliche Funktionen für die App sind Chat, Videoanalyse, Sprachausgabe bzw. Speaker und KI-Unterstützung. Auch eine PWA gehört zum Projekt.
+
+5. AUFBAU DER WEBSEITE
+
+Ich baue zuerst die Oberfläche mit HTML und CSS. JavaScript kommt für die Funktionen dazu. Das Design habe ich in Figma vorbereitet.
+
+Es gibt zwei getrennte Seiten:
+
+Main HTML: die Hauptseite mit Navigation, Hunden und den verfügbaren Tricks.
+Login HTML: die Anmeldeseite mit E-Mail und Passwort.
+
+Das Design ist in Dunkelgrün, Creme und Orange gehalten. Das Pfotenlogo gehört zum DogTrainer Hub. Auf der Hauptseite will ich nicht alles mit Anzeigen vollstopfen. Die wichtigen Sachen sollen sofort zu finden sein.
+
+Die Seite muss auch auf Handy und Tablet funktionieren. Dafür passe ich das Layout mit CSS an die Bildschirmgröße an.
+
+6. TECHNIK
+
+Frontend:
+HTML, CSS und JavaScript. Damit mache ich die Seiten, Formulare, Buttons, Suche und die Anzeige der Daten.
+
+Backend:
+Node.js mit Express. Der Server verarbeitet die Anfragen, prüft Eingaben und kümmert sich um die Verbindung zur Datenbank.
+
+API:
+Über die API werden die Daten zwischen Webseite und Server ausgetauscht. Zum Beispiel Hunde und Tricks laden, neue Übungen speichern oder vorhandene Einträge ändern.
+
+Datenbank:
+Hier speichere ich Benutzer, Hunde, Übungen und Trainingsdaten. Die Daten müssen nach einem Neustart weiterhin vorhanden sein.
+
+CRUD:
+Create, Read, Update, Delete. Ich brauche diese Funktionen für die Datensätze. Also etwas neu anlegen, anzeigen, bearbeiten und löschen. Zum Beispiel bei Hunden und Tricks.
+
+Sicherheit:
+Login, Passwortschutz, Verifizierung, Cookies und Benutzerrechte. Nicht jeder Benutzer darf alles bearbeiten oder löschen.
+
+7. PROJEKTABLAUF
+
+Phase 1 – HTML und CSS
+
+Zuerst baue ich die Hauptseite und die Login-Seite. Navigation, Hundekarten, Trickkarten, Formulare und das Design. Danach kontrolliere ich, wie das Ganze am PC, Tablet und Handy aussieht.
+
+Phase 2 – Serverscript
+
+Node.js und Express einrichten, Server starten und die ersten Routen testen. Ich will zuerst sicherstellen, dass der Server richtig läuft und Anfragen beantworten kann.
+
+Phase 3 – JavaScript und Node
+
+Danach baue ich die Funktionen ein. Buttons, Formulare, Eingaben prüfen und Daten mit fetch an den Server schicken oder vom Server holen. Die Funktionen teste ich einzeln.
+
+Phase 4 – Datenbank und API
+
+Datenbank aufbauen und mit dem Backend verbinden. Dann die API-Routen und CRUD-Funktionen erstellen. Hunde, Benutzer, Tricks und Trainingsdaten sollen gespeichert, geladen, geändert und gelöscht werden können.
+
+Phase 5 – Optimierung und Tests
+
+Zum Schluss gehe ich alles durch. Login, Suche, Formulare, Datenbank, API und Darstellung auf verschiedenen Geräten. Fehler beheben, unnötige Sachen entfernen und schauen, dass die App ordentlich läuft.
+
+8. WAS AM ENDE RAUSKOMMEN SOLL
+
+Eine benutzbare Webapp für Hundetraining. Man kann sich anmelden, Hunde verwalten, Tricks suchen, Übungen nachlesen und Training dokumentieren. Das Ganze mit eigenem Backend, API und Datenbank.
+
+Ich will das Projekt so aufbauen, dass ich nach dem Kurs weitere Funktionen wie Videoanalyse, Chat, Sprachausgabe und KI ergänzen kann, ohne alles neu machen zu müssen.
