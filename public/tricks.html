@@ -1,0 +1,94 @@
+﻿<!doctype html>
+<html lang="de">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Tricks | DogTrainer Hub</title>
+      <link rel="stylesheet" href="css/style.css" />
+   </head>
+   <body>
+      <header>
+         <nav aria-label="Hauptnavigation">
+            <a class="nav-brand" href="index.html">DogTrainer Hub</a>
+            <ul>
+               <li><a href="index.html">Home</a></li>
+               <li><a href="dogs.html">Hunde</a></li>
+               <li><a href="tricks.html" aria-current="page">Tricks</a></li>
+            </ul>
+         </nav>
+      </header>
+
+      <!-- TODO: Trickkarten aus trick.js erstellen und fehlende Voraussetzungen anzeigen. -->
+      <main class="tricks-page">
+         <section class="welcome">
+            <h1>Tricks üben</h1>
+            <p>Wähle einen Trick aus und schau dir die Anleitung an.</p>
+            <a class="start-button" href="#tricks-heading">Trick auswählen</a>
+         </section>
+
+         <section aria-labelledby="tricks-heading">
+            <h2 id="tricks-heading">Alle Tricks</h2>
+            <div class="trick-liste">
+               <article class="trick-karte" id="sitz">
+                  <span class="schwierigkeit">Grundgehorsam · Leicht</span>
+                  <h3>Sitz</h3>
+                  <p>Dein Hund setzt sich auf dein Kommando hin.</p>
+                  <p><strong>Vorher lernen:</strong> Keine</p>
+                  <a class="start-button" href="trick.html#sitz">Anleitung ansehen</a>
+               </article>
+               <article class="trick-karte" id="platz">
+                  <span class="schwierigkeit">Grundgehorsam · Leicht</span>
+                  <h3>Platz</h3>
+                  <p>Dein Hund legt sich auf dein Kommando hin.</p>
+                  <p><strong>Vorher lernen:</strong> Keine</p>
+                  <a class="start-button" href="trick.html#platz">Anleitung ansehen</a>
+               </article>
+               <article class="trick-karte" id="bleib">
+                  <span class="schwierigkeit">Grundgehorsam · Mittel</span>
+                  <h3>Bleib</h3>
+                  <p>Dein Hund bleibt sitzen oder liegen, bis du ihn freigibst.</p>
+                  <p><strong>Vorher lernen:</strong> Sitz oder Platz</p>
+                  <a class="start-button" href="trick.html#bleib">Anleitung ansehen</a>
+               </article>
+               <article class="trick-karte" id="pfote">
+                  <span class="schwierigkeit">Tricks · Mittel</span>
+                  <h3>Pfote geben</h3>
+                  <p>Dein Hund gibt dir im Sitzen eine Vorderpfote.</p>
+                  <p><strong>Vorher lernen:</strong> Sitz und Bleib</p>
+                  <a class="start-button" href="trick.html#pfote">Anleitung ansehen</a>
+               </article>
+               <article class="trick-karte" id="totstellen">
+                  <span class="schwierigkeit">Tricks · Mittel</span>
+                  <h3>Totstellen</h3>
+                  <p>Dein Hund legt sich auf die Seite und bleibt kurz liegen.</p>
+                  <p><strong>Vorher lernen:</strong> Platz und Bleib</p>
+                  <a class="start-button" href="trick.html#totstellen">Anleitung ansehen</a>
+               </article>
+               <article class="trick-karte" id="rolle">
+                  <span class="schwierigkeit">Tricks · Mittel</span>
+                  <h3>Rolle</h3>
+                  <p>Dein Hund rollt sich aus dem Liegen einmal um die eigene Achse.</p>
+                  <p><strong>Vorher lernen:</strong> Platz</p>
+                  <a class="start-button" href="trick.html#rolle">Anleitung ansehen</a>
+               </article>
+               <article class="trick-karte" id="criss-cross">
+                  <span class="schwierigkeit">Tricks · Schwer</span>
+                  <h3>Criss Cross</h3>
+                  <p>Dein Hund kreuzt im Liegen seine Vorderpfoten.</p>
+                  <p><strong>Vorher lernen:</strong> Platz und Bleib</p>
+                  <a class="start-button" href="trick.html#criss-cross">Anleitung ansehen</a>
+               </article>
+            </div>
+         </section>
+
+         <section class="training-tip">
+            <h2>Tipp fürs Training</h2>
+            <p>Übe lieber kurz und regelmäßig. Belohne kleine Fortschritte und gönne deinem Hund zwischendurch eine Pause.</p>
+         </section>
+      </main>
+
+      <footer>
+         <p>&copy; 2026 DogTrainer Hub. Alle Rechte vorbehalten.</p>
+      </footer>
+   </body>
+</html>

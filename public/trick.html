@@ -1,0 +1,196 @@
+﻿<!doctype html>
+<html lang="de">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Übung | DogTrainer Hub</title>
+      <link rel="stylesheet" href="css/style.css" />
+   </head>
+   <body>
+      <header>
+         <nav aria-label="Hauptnavigation">
+            <a class="nav-brand" href="index.html">DogTrainer Hub</a>
+            <ul>
+               <li><a href="index.html">Home</a></li>
+               <li><a href="dogs.html">Hunde</a></li>
+               <li><a href="tricks.html" aria-current="page">Tricks</a></li>
+            </ul>
+         </nav>
+      </header>
+      <!-- TODO: Nur den ausgewählten Trick anzeigen und Voraussetzungen für den Hund prüfen. -->
+      <main>
+         <a class="zurueck" href="tricks.html">← Alle Tricks</a>
+         <section class="welcome">
+            <h1>Tricks üben</h1>
+            <p>Hier findest du die Anleitungen und Voraussetzungen.</p>
+         </section>
+         <section class="trick-karte" id="sitz">
+            <span class="schwierigkeit">Grundgehorsam · Leicht</span>
+            <h2>Sitz</h2>
+            <p>Dein Hund setzt sich auf dein Kommando hin.</p>
+            <p><strong>Vorher lernen:</strong> Keine</p>
+            <h3>Anleitung</h3>
+            <ol>
+               <li>Halte ein Leckerli vor die Nase deines Hundes.</li>
+               <li>Führe es langsam etwas nach oben und hinten, bis er sich setzt.</li>
+               <li>Belohne ihn direkt. Ergänze das Wort „Sitz“, sobald die Bewegung zuverlässig klappt.</li>
+            </ol>
+            <div class="trick-formular">
+               <label for="hund-sitz">Hund auswählen</label>
+               <!-- TODO: Gespeicherte Hunde zur Auswahl laden. -->
+               <select id="hund-sitz" name="hund">
+                  <option value="bella">Bella</option>
+               </select>
+               <p>Das Speichern kommt später dazu.</p>
+               <!-- TODO: Button aktivieren und den Trick für diesen Hund als geschafft speichern. -->
+               <button class="start-button" type="button" disabled>Geschafft</button>
+            </div>
+         </section>
+
+         <section class="trick-karte" id="platz">
+            <span class="schwierigkeit">Grundgehorsam · Leicht</span>
+            <h2>Platz</h2>
+            <p>Dein Hund legt sich auf dein Kommando hin.</p>
+            <p><strong>Vorher lernen:</strong> Keine</p>
+            <h3>Anleitung</h3>
+            <ol>
+               <li>Halte ein Leckerli vor die Nase deines Hundes.</li>
+               <li>Führe es langsam zum Boden. Belohne ihn, wenn er sich hinlegt.</li>
+               <li>Wenn das gut klappt, ergänze das Wort „Platz“. Drücke ihn nicht nach unten.</li>
+            </ol>
+            <div class="trick-formular">
+               <label for="hund-platz">Hund auswählen</label>
+               <!-- TODO: Gespeicherte Hunde zur Auswahl laden. -->
+               <select id="hund-platz" name="hund">
+                  <option value="bella">Bella</option>
+               </select>
+               <p>Das Speichern kommt später dazu.</p>
+               <!-- TODO: Button aktivieren und den Trick für diesen Hund als geschafft speichern. -->
+               <button class="start-button" type="button" disabled>Geschafft</button>
+            </div>
+         </section>
+
+         <section class="trick-karte" id="bleib">
+            <span class="schwierigkeit">Grundgehorsam · Mittel</span>
+            <h2>Bleib</h2>
+            <p>Dein Hund bleibt sitzen oder liegen, bis du ihn freigibst.</p>
+            <p><strong>Vorher lernen:</strong> Sitz oder Platz</p>
+            <h3>Anleitung</h3>
+            <ol>
+               <li>Lass deinen Hund Sitz oder Platz machen und sage „Bleib“.</li>
+               <li>Warte kurz, belohne ihn in dieser Position und gib ihn mit einem festen Wort wie „Okay“ frei.</li>
+               <li>
+                  Verlängere zuerst die Zeit in kleinen Schritten. Übe Abstand erst danach. Steht er auf, starte wieder
+                  leichter.
+               </li>
+            </ol>
+            <div class="trick-formular">
+               <label for="hund-bleib">Hund auswählen</label>
+               <!-- TODO: Gespeicherte Hunde zur Auswahl laden. -->
+               <select id="hund-bleib" name="hund">
+                  <option value="bella">Bella</option>
+               </select>
+               <p>Das Speichern kommt später dazu.</p>
+               <!-- TODO: Button aktivieren und den Trick für diesen Hund als geschafft speichern. -->
+               <button class="start-button" type="button" disabled>Geschafft</button>
+            </div>
+         </section>
+
+         <section class="trick-karte" id="pfote">
+            <span class="schwierigkeit">Tricks · Mittel</span>
+            <h2>Pfote geben</h2>
+            <p>Dein Hund gibt dir im Sitzen eine Vorderpfote.</p>
+            <p><strong>Vorher lernen:</strong> Sitz und Bleib</p>
+            <h3>Anleitung</h3>
+            <ol>
+               <li>Lass deinen Hund sitzen und halte ihm deine Hand hin.</li>
+               <li>Belohne ihn, sobald er eine Vorderpfote anhebt oder deine Hand berührt. Ziehe nicht an seiner Pfote.</li>
+               <li>Übe in kleinen Schritten und ergänze das Wort „Pfote“, wenn es klappt.</li>
+            </ol>
+            <div class="trick-formular">
+               <label for="hund-pfote">Hund auswählen</label>
+               <!-- TODO: Gespeicherte Hunde zur Auswahl laden. -->
+               <select id="hund-pfote" name="hund">
+                  <option value="bella">Bella</option>
+               </select>
+               <p>Das Speichern kommt später dazu.</p>
+               <!-- TODO: Button aktivieren und den Trick für diesen Hund als geschafft speichern. -->
+               <button class="start-button" type="button" disabled>Geschafft</button>
+            </div>
+         </section>
+
+         <section class="trick-karte" id="totstellen">
+            <span class="schwierigkeit">Tricks · Mittel</span>
+            <h2>Totstellen</h2>
+            <p>Dein Hund legt sich auf die Seite und bleibt kurz liegen.</p>
+            <p><strong>Vorher lernen:</strong> Platz und Bleib</p>
+            <h3>Anleitung</h3>
+            <ol>
+               <li>Lass deinen Hund auf einer weichen, rutschfesten Fläche Platz machen.</li>
+               <li>
+                  Führe ein Leckerli langsam seitlich zur Schulter, bis er sich entspannt auf die Seite legt. Erzwinge die
+                  Bewegung nicht.
+               </li>
+               <li>Belohne ihn und verlängere die Zeit langsam. Ergänze dein Kommando und gib ihn danach wieder frei.</li>
+            </ol>
+            <div class="trick-formular">
+               <label for="hund-totstellen">Hund auswählen</label>
+               <!-- TODO: Gespeicherte Hunde zur Auswahl laden. -->
+               <select id="hund-totstellen" name="hund">
+                  <option value="bella">Bella</option>
+               </select>
+               <p>Das Speichern kommt später dazu.</p>
+               <!-- TODO: Button aktivieren und den Trick für diesen Hund als geschafft speichern. -->
+               <button class="start-button" type="button" disabled>Geschafft</button>
+            </div>
+         </section>
+
+         <section class="trick-karte" id="rolle">
+            <span class="schwierigkeit">Tricks · Mittel</span>
+            <h2>Rolle</h2>
+            <p>Dein Hund rollt sich aus dem Liegen einmal um die eigene Achse.</p>
+            <p><strong>Vorher lernen:</strong> Platz</p>
+            <h3>Anleitung</h3>
+            <ol>
+               <li>Übe auf einer weichen, rutschfesten Fläche und lass deinen Hund entspannt Platz machen.</li>
+               <li>Führe ein Leckerli von seiner Nase seitlich Richtung Schulter, sodass er sich auf die Seite legt.</li>
+               <li>Belohne kleine Schritte und führe ihn nach und nach in eine ganze Rolle. Erzwinge die Bewegung nicht.</li>
+            </ol>
+            <div class="trick-formular">
+               <label for="hund-rolle">Hund auswählen</label>
+               <!-- TODO: Gespeicherte Hunde zur Auswahl laden. -->
+               <select id="hund-rolle" name="hund">
+                  <option value="bella">Bella</option>
+               </select>
+               <p>Das Speichern kommt später dazu.</p>
+               <!-- TODO: Button aktivieren und den Trick für diesen Hund als geschafft speichern. -->
+               <button class="start-button" type="button" disabled>Geschafft</button>
+            </div>
+         </section>
+
+         <section class="trick-karte" id="criss-cross">
+            <span class="schwierigkeit">Tricks · Schwer</span>
+            <h2>Criss Cross</h2>
+            <p>Dein Hund kreuzt im Liegen seine Vorderpfoten.</p>
+            <p><strong>Vorher lernen:</strong> Platz und Bleib</p>
+            <h3>Anleitung</h3>
+            <ol>
+               <li>Übe zuerst, dass dein Hund im Liegen mit einer Vorderpfote deine Hand berührt.</li>
+               <li>Halte deine Hand schrittweise weiter in Richtung der anderen Vorderpfote.</li>
+               <li>Belohne das Überkreuzen und ergänze später dein Kommando „Criss Cross“.</li>
+            </ol>
+            <div class="trick-formular">
+               <label for="hund-criss-cross">Hund auswählen</label>
+               <!-- TODO: Gespeicherte Hunde zur Auswahl laden. -->
+               <select id="hund-criss-cross" name="hund">
+                  <option value="bella">Bella</option>
+               </select>
+               <p>Das Speichern kommt später dazu.</p>
+               <!-- TODO: Button aktivieren und den Trick für diesen Hund als geschafft speichern. -->
+               <button class="start-button" type="button" disabled>Geschafft</button>
+            </div>
+         </section>
+      </main>
+      <footer><p>&copy; 2026 DogTrainer Hub. Alle Rechte vorbehalten.</p></footer>
+   </body>
+</html>

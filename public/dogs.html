@@ -1,0 +1,93 @@
+﻿<!doctype html>
+<html lang="de">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Meine Hunde | DogTrainer Hub</title>
+      <link rel="stylesheet" href="css/style.css" />
+   </head>
+   <body>
+      <header>
+         <nav aria-label="Hauptnavigation">
+            <a class="nav-brand" href="index.html">DogTrainer Hub</a>
+            <ul>
+               <li><a href="index.html">Home</a></li>
+               <li><a href="dogs.html" aria-current="page">Hunde</a></li>
+               <li><a href="tricks.html">Tricks</a></li>
+            </ul>
+         </nav>
+      </header>
+
+      <!-- TODO: beispiel ersetzen. -->
+      <main class="dogs-page">
+         <section class="welcome">
+            <h1>Meine Hunde</h1>
+            <p>Hier siehst du deine Hunde und ihren Fortschritt.</p>
+            <a class="start-button" href="#bella">Bellas Profil ansehen</a>
+         </section>
+
+         <!--Beispiel-->
+         <section id="bella" class="dog-profile" aria-labelledby="bella-name">
+            <div class="profile-header">
+               <div class="dog-picture" aria-hidden="true">🐕</div>
+               <div>
+                  <h2 id="bella-name">Bella</h2>
+                  <p>Labrador Retriever</p>
+                  <span class="dog-level">Anfänger</span>
+               </div>
+            </div>
+
+            <div class="profile-columns">
+               <div>
+                  <h3>Über Bella</h3>
+                  <p class="profile-description">
+                     Bella ist neugierig, verspielt und lernt gerne neue Tricks. Am liebsten trainiert sie mit Leckerlis als
+                     Belohnung.
+                  </p>
+                  <dl class="dog-details">
+                     <div>
+                        <dt>Alter</dt>
+                        <dd>3 Jahre</dd>
+                     </div>
+                     <div>
+                        <dt>Geschlecht</dt>
+                        <dd>Hündin</dd>
+                     </div>
+                     <div>
+                        <dt>Gewicht</dt>
+                        <dd>25 kg</dd>
+                     </div>
+                     <div>
+                        <dt>Lieblingsbelohnung</dt>
+                        <dd>Leckerlis</dd>
+                     </div>
+                  </dl>
+               </div>
+
+               <!-- TODO: Fortschritt des Hundes laden ( die Balken aktualisieren wenn sie bleiben..) -->
+               <div class="dog-progress">
+                  <h3>Trainingsfortschritt</h3>
+                  <p>Diese Tricks übt Bella gerade:</p>
+                  <div class="progress-item">
+                     <label for="sitz-progress">Sitz <span>80 %</span></label>
+                     <progress id="sitz-progress" value="80" max="100">80 %</progress>
+                  </div>
+                  <div class="progress-item">
+                     <label for="rolle-progress">Rolle <span>40 %</span></label>
+                     <progress id="rolle-progress" value="40" max="100">40 %</progress>
+                  </div>
+                  <div class="progress-item">
+                     <label for="cross-progress">Criss Cross <span>10 %</span></label>
+                     <progress id="cross-progress" value="10" max="100">10 %</progress>
+                  </div>
+                  <a class="start-button" href="tricks.html">Mit Bella trainieren</a>
+               </div>
+            </div>
+         </section>
+      </main>
+
+      <footer>
+         <p>&copy; 2026 DogTrainer Hub. Alle Rechte vorbehalten.</p>
+      </footer>
+   </body>
+</html>

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="de">
    <head>
       <meta charset="UTF-8" />
@@ -7,16 +7,61 @@
       <link rel="stylesheet" href="css/style.css" />
    </head>
    <body>
-   <header>
-      <nav aria-label="Hauptnavigation">
-         <a class="nav-brand" href="index.html">DogTrainer Hub</a>
-         <ul>
-            <li><a href="index.html" aria-current="page">Home</a></li>
-            <li><a href="dogs.html">Hunde</a></li>
-            <li><a href="tricks.html">Tricks</a></li>
-            <li><a href="training.html">Training</a></li>
-         </ul>
-      </nav>
-   </header>
+      <header>
+         <nav aria-label="Hauptnavigation">
+            <a class="nav-brand" href="index.html">DogTrainer Hub</a>
+            <ul>
+               <li><a href="index.html" aria-current="page">Home</a></li>
+               <!-- aria-current Accessibility für screenreader-->
+               <li><a href="dogs.html">Hunde</a></li>
+               <li><a href="tricks.html">Tricks</a></li>
+            </ul>
+         </nav>
+      </header>
+      <!-- TODO: Hundekarten und Tricks später aus den Daten laden. -->
+      <main>
+         <section class="welcome">
+            <h1>Willkommen beim DogTrainer Hub</h1>
+            <p>Deine Hunde und ihre Tricks im Überblick.</p>
+            <a class="start-button" href="tricks.html">Training starten</a>
+         </section>
+
+         <section class="dogs">
+            <h2>Meine Hunde</h2>
+            <div class="dog-list">
+               <article class="dog-card">
+                  <div class="dog-picture" aria-hidden="true">🐕</div>
+                  <div>
+                     <h3>Bella</h3>
+                     <p>Labrador Retriever</p>
+                     <a href="dogs.html">Profil ansehen →</a>
+                  </div>
+               </article>
+               <!-- TODO: Formular zum Hinzufügen eines Hundes öffnen. -->
+               <a class="add-dog" href="dogs.html">+ Hund hinzufügen</a>
+            </div>
+         </section>
+
+         <section class="tricks">
+            <h2>Alle Tricks</h2>
+            <div class="trick-list">
+               <a class="trick-card" href="trick.html#sitz">
+                  <h3>Sitz</h3>
+                  <p>Grundgehorsam · Leicht</p>
+               </a>
+               <a class="trick-card" href="trick.html#rolle">
+                  <h3>Rolle</h3>
+                  <p>Tricks · Mittel</p>
+               </a>
+               <a class="trick-card" href="trick.html#criss-cross">
+                  <h3>Criss Cross</h3>
+                  <p>Tricks · schwer</p>
+               </a>
+            </div>
+         </section>
+      </main>
+      <footer>
+         <p>&copy; 2026 DogTrainer Hub. Alle Rechte vorbehalten.</p>
+      </footer>
    </body>
 </html>

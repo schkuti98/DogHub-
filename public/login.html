@@ -1,0 +1,78 @@
+﻿<!doctype html>
+<html lang="de">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Anmeldung | DogTrainer Hub</title>
+      <link rel="stylesheet" href="css/style.css" />
+   </head>
+   <body class="login-page">
+      <header>
+         <nav aria-label="Hauptnavigation">
+            <a class="nav-brand" href="index.html">DogTrainer Hub</a>
+         </nav>
+      </header>
+
+      <!-- TODO: Anmeldung mit dem Server verbinden und Fehler im Formular anzeigen. -->
+      <main class="login-layout">
+         <section class="login-intro" aria-labelledby="login-heading">
+            <div>
+               <h1 id="login-heading">Training beginnt<br /><span>mit Vertrauen.</span></h1>
+               <p>Organisiere Hunde, Übungen und Training an einem Ort.</p>
+               <div class="login-paws" aria-hidden="true">🐾</div>
+            </div>
+         </section>
+
+         <section class="login-area" aria-labelledby="form-heading">
+            <div class="login-card">
+               <h2 id="form-heading">Willkommen zurück</h2>
+               <p class="login-subtitle">Melde dich in deinem Konto an.</p>
+
+               <!--  Vorlage -->
+               <form id="login-form">
+                  <label for="email">E-Mail-Adresse</label>
+                  <input id="email" name="email" type="email" placeholder="name@beispiel.at" autocomplete="username" required />
+
+                  <label for="password">Passwort</label>
+                  <input
+                     id="password"
+                     name="password"
+                     type="password"
+                     placeholder="••••••••"
+                     autocomplete="current-password"
+                     required
+                  />
+
+                  <!-- TODO: Angemeldet bleiben und Passwort zurücksetzen ergänzen. -->
+                  <div class="login-options">
+                     <label class="remember-login" for="remember">
+                        <input id="remember" name="remember" type="checkbox" />
+                        Angemeldet bleiben
+                     </label>
+                     <button
+                        class="login-text-button"
+                        type="button"
+                        data-login-help="Das Zurücksetzen des Passworts ist noch nicht verfügbar."
+                     >
+                        Passwort vergessen?
+                     </button>
+                  </div>
+
+                  <button class="start-button login-submit" type="submit">Anmelden</button>
+               </form>
+
+               <!-- TODO: Registrierungsformular ergänzen und Benutzer anlegen. -->
+               <p class="login-register">
+                  Noch kein Konto?
+                  <button class="login-text-button" type="button" data-login-help="Die Registrierung ist noch nicht verfügbar.">
+                     Registrieren
+                  </button>
+               </p>
+               <p class="login-message" id="login-message" role="status"></p>
+            </div>
+         </section>
+      </main>
+   </body>
+</html>
+
+
