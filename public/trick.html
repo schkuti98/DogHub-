@@ -15,6 +15,7 @@
                <li><a href="dogs.html">Hunde</a></li>
                <li><a href="tricks.html">Tricks</a></li>
             </ul>
+            <button id="logout-btn" class="login-text-button" type="button">Abmelden</button>
          </nav>
       </header>
       <!-- TODO: Nur den ausgewählten Trick anzeigen und Voraussetzungen für den Hund prüfen. -->
@@ -25,7 +26,7 @@
             <h1>Tricks üben</h1>
             <p>Hier findest du die Anleitungen und Voraussetzungen.</p>
          </section>
-         <section class="trick-karte" id="sitz">
+         <section class="trick-card" id="sitz">
             <span class="schwierigkeit">Grundgehorsam · Leicht</span>
             <h2>Sitz</h2>
             <p>Dein Hund setzt sich auf dein Kommando hin.</p>
@@ -48,7 +49,7 @@
             </div>
          </section>
 
-         <section class="trick-karte" id="platz">
+         <section class="trick-card" id="platz">
             <span class="schwierigkeit">Grundgehorsam · Leicht</span>
             <h2>Platz</h2>
             <p>Dein Hund legt sich auf dein Kommando hin.</p>
@@ -71,7 +72,7 @@
             </div>
          </section>
 
-         <section class="trick-karte" id="bleib">
+         <section class="trick-card" id="bleib">
             <span class="schwierigkeit">Grundgehorsam · Mittel</span>
             <h2>Bleib</h2>
             <p>Dein Hund bleibt sitzen oder liegen, bis du ihn freigibst.</p>
@@ -97,7 +98,7 @@
             </div>
          </section>
 
-         <section class="trick-karte" id="pfote">
+         <section class="trick-card" id="pfote">
             <span class="schwierigkeit">Tricks · Mittel</span>
             <h2>Pfote geben</h2>
             <p>Dein Hund gibt dir im Sitzen eine Vorderpfote.</p>
@@ -120,7 +121,7 @@
             </div>
          </section>
 
-         <section class="trick-karte" id="totstellen">
+         <section class="trick-card" id="totstellen">
             <span class="schwierigkeit">Tricks · Mittel</span>
             <h2>Totstellen</h2>
             <p>Dein Hund legt sich auf die Seite und bleibt kurz liegen.</p>
@@ -146,7 +147,7 @@
             </div>
          </section>
 
-         <section class="trick-karte" id="rolle">
+         <section class="trick-card" id="rolle">
             <span class="schwierigkeit">Tricks · Mittel</span>
             <h2>Rolle</h2>
             <p>Dein Hund rollt sich aus dem Liegen einmal um die eigene Achse.</p>
@@ -169,7 +170,7 @@
             </div>
          </section>
 
-         <section class="trick-karte" id="criss-cross">
+         <section class="trick-card" id="criss-cross">
             <span class="schwierigkeit">Tricks · Schwer</span>
             <h2>Criss Cross</h2>
             <p>Dein Hund kreuzt im Liegen seine Vorderpfoten.</p>
@@ -193,5 +194,11 @@
          </section>
       </main>
       <footer><p>&copy; 2026 DogTrainer Hub. Alle Rechte vorbehalten.</p></footer>
+      <script src="js/auth.js"></script>
+      <script>requireAuth();</script>
+      <script src="js/trick.js"></script>
+      <script src="js/training.js"></script>
    </body>
 </html>
+
+

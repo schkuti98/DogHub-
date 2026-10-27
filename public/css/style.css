@@ -179,15 +179,6 @@ h3 {
    text-decoration: none;
 }
 
-.trick-card {
-   flex: 1;
-   padding: 18px;
-   border-radius: 9px;
-   background-color: var(--main-color-3);
-   color: var(--main-color-2);
-   text-decoration: none;
-}
-
 footer {
    padding: 10px 20px;
    color: var(--main-color-2);
@@ -276,8 +267,8 @@ footer {
    font-weight: bold;
 }
 
-.login-card input[type="email"],
-.login-card input[type="password"] {
+.login-card input[type='email'],
+.login-card input[type='password'] {
    width: 100%;
    margin-bottom: 20px;
    padding: 13px;
@@ -434,19 +425,19 @@ footer {
 }
 
 /* Tricks-Seite */
-.trick-liste {
-   display: flex;
+.trick-list {
    flex-wrap: wrap;
-   gap: 20px;
    align-items: flex-start;
 }
 
-.trick-karte {
+.trick-card {
    flex: 1 1 260px;
    min-width: 0;
    padding: 24px;
    border-radius: 12px;
    background-color: var(--main-color-3);
+   color: var(--main-color-2);
+   text-decoration: none;
 }
 
 .schwierigkeit {
@@ -458,32 +449,32 @@ footer {
    font-size: 12px;
 }
 
-.trick-karte h3 {
+.trick-card h3 {
    font-size: 23px;
 }
 
-.trick-karte p,
-.trick-karte li,
+.trick-card p,
+.trick-card li,
 .training-tip p {
    font-size: 14px;
    line-height: 1.6;
 }
 
-.trick-karte details {
+.trick-card details {
    margin: 24px 0;
 }
 
-.trick-karte summary {
+.trick-card summary {
    cursor: pointer;
    font-size: 14px;
    font-weight: bold;
 }
 
-.trick-karte ol {
+.trick-card ol {
    padding-left: 20px;
 }
 
-.trick-karte li + li {
+.trick-card li + li {
    margin-top: 10px;
 }
 
@@ -585,7 +576,7 @@ footer {
    accent-color: var(--main-color-2);
 }
 
-nav a[aria-current="page"] {
+nav a[aria-current='page'] {
    text-decoration: underline;
    text-underline-offset: 4px;
 }
@@ -635,5 +626,34 @@ nav a[aria-current="page"] {
       gap: 20px;
    }
 }
+/*card styles*/
+/* Status-Styles für Trickkarten */
+.trick-card {
+   transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease,
+      opacity 0.15s ease;
+}
 
+.trick-card.unlocked {
+   border: 2px solid #3b82f6;
+   background: #eff6ff;
+}
 
+.trick-card.done {
+   border: 2px solid #22c55e;
+   background: #f0fdf4;
+}
+
+.trick-card.locked {
+   border: 2px solid #9ca3af;
+   background: #f3f4f6;
+   opacity: 0.6;
+   cursor: not-allowed;
+}
+
+.trick-card .trick-state {
+   margin-top: 0.35rem;
+   font-weight: 700;
+   font-size: 0.9rem;
+}

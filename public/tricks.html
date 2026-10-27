@@ -16,6 +16,7 @@
                <li><a href="tricks.html">Tricks</a></li>
                <!-- aria current page hier erst wenn einzelne trick karten laden für spezifische ansicht-->
             </ul>
+            <button id="logout-btn" class="login-text-button" type="button">Abmelden</button>
          </nav>
       </header>
 
@@ -29,50 +30,50 @@
 
          <section aria-labelledby="tricks-heading">
             <h2 id="tricks-heading">Alle Tricks</h2>
-            <div class="trick-liste">
-               <article class="trick-karte" id="sitz">
+            <div class="trick-list">
+               <article class="trick-card" id="sitz">
                   <span class="schwierigkeit">Grundgehorsam · Leicht</span>
                   <h3>Sitz</h3>
                   <p>Dein Hund setzt sich auf dein Kommando hin.</p>
                   <p><strong>Vorher lernen:</strong> Keine</p>
                   <a class="start-button" href="trick.html#sitz">Anleitung ansehen</a>
                </article>
-               <article class="trick-karte" id="platz">
+               <article class="trick-card" id="platz">
                   <span class="schwierigkeit">Grundgehorsam · Leicht</span>
                   <h3>Platz</h3>
                   <p>Dein Hund legt sich auf dein Kommando hin.</p>
                   <p><strong>Vorher lernen:</strong> Keine</p>
                   <a class="start-button" href="trick.html#platz">Anleitung ansehen</a>
                </article>
-               <article class="trick-karte" id="bleib">
+               <article class="trick-card" id="bleib">
                   <span class="schwierigkeit">Grundgehorsam · Mittel</span>
                   <h3>Bleib</h3>
                   <p>Dein Hund bleibt sitzen oder liegen, bis du ihn freigibst.</p>
                   <p><strong>Vorher lernen:</strong> Sitz oder Platz</p>
                   <a class="start-button" href="trick.html#bleib">Anleitung ansehen</a>
                </article>
-               <article class="trick-karte" id="pfote">
+               <article class="trick-card" id="pfote">
                   <span class="schwierigkeit">Tricks · Mittel</span>
                   <h3>Pfote geben</h3>
                   <p>Dein Hund gibt dir im Sitzen eine Vorderpfote.</p>
                   <p><strong>Vorher lernen:</strong> Sitz und Bleib</p>
                   <a class="start-button" href="trick.html#pfote">Anleitung ansehen</a>
                </article>
-               <article class="trick-karte" id="totstellen">
+               <article class="trick-card" id="totstellen">
                   <span class="schwierigkeit">Tricks · Mittel</span>
                   <h3>Totstellen</h3>
                   <p>Dein Hund legt sich auf die Seite und bleibt kurz liegen.</p>
                   <p><strong>Vorher lernen:</strong> Platz und Bleib</p>
                   <a class="start-button" href="trick.html#totstellen">Anleitung ansehen</a>
                </article>
-               <article class="trick-karte" id="rolle">
+               <article class="trick-card" id="rolle">
                   <span class="schwierigkeit">Tricks · Mittel</span>
                   <h3>Rolle</h3>
                   <p>Dein Hund rollt sich aus dem Liegen einmal um die eigene Achse.</p>
                   <p><strong>Vorher lernen:</strong> Platz</p>
                   <a class="start-button" href="trick.html#rolle">Anleitung ansehen</a>
                </article>
-               <article class="trick-karte" id="criss-cross">
+               <article class="trick-card" id="criss-cross">
                   <span class="schwierigkeit">Tricks · Schwer</span>
                   <h3>Criss Cross</h3>
                   <p>Dein Hund kreuzt im Liegen seine Vorderpfoten.</p>
@@ -91,5 +92,12 @@
       <footer>
          <p>&copy; 2026 DogTrainer Hub. Alle Rechte vorbehalten.</p>
       </footer>
+      <script src="js/auth.js"></script>
+      <script>requireAuth();</script>
+      <script src="js/trick.js"></script>
+      <script src="js/training.js"></script>
+      <script src="js/tricks.js"></script>
    </body>
 </html>
+
+

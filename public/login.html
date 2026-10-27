@@ -13,7 +13,6 @@
          </nav>
       </header>
 
-      <!-- TODO: Anmeldung mit dem Server verbinden und Fehler im Formular anzeigen. -->
       <main class="login-layout">
          <section class="login-intro" aria-labelledby="login-heading">
             <div>
@@ -28,7 +27,6 @@
                <h2 id="form-heading">Willkommen zurück</h2>
                <p class="login-subtitle">Melde dich in deinem Konto an.</p>
 
-               <!--  Vorlage -->
                <form id="login-form">
                   <label for="email">E-Mail-Adresse</label>
                   <input id="email" name="email" type="email" placeholder="name@beispiel.at" autocomplete="username" required />
@@ -43,7 +41,6 @@
                      required
                   />
 
-                  <!-- TODO: Angemeldet bleiben und Passwort zurücksetzen ergänzen. -->
                   <div class="login-options">
                      <label class="remember-login" for="remember">
                         <input id="remember" name="remember" type="checkbox" />
@@ -61,18 +58,49 @@
                   <button class="start-button login-submit" type="submit">Anmelden</button>
                </form>
 
-               <!-- TODO: Registrierungsformular ergänzen und Benutzer anlegen. -->
                <p class="login-register">
                   Noch kein Konto?
-                  <button class="login-text-button" type="button" data-login-help="Die Registrierung ist noch nicht verfügbar.">
-                     Registrieren
-                  </button>
+                  <button id="toggle-register" class="login-text-button" type="button">Registrieren</button>
                </p>
+
+               <form id="register-form" hidden>
+                  <label for="register-email">E-Mail-Adresse</label>
+                  <input
+                     id="register-email"
+                     name="register-email"
+                     type="email"
+                     placeholder="name@beispiel.at"
+                     autocomplete="email"
+                     required
+                  />
+
+                  <label for="register-password">Passwort</label>
+                  <input
+                     id="register-password"
+                     name="register-password"
+                     type="password"
+                     placeholder="mindestens 6 Zeichen"
+                     autocomplete="new-password"
+                     required
+                  />
+
+                  <label for="register-password-repeat">Passwort wiederholen</label>
+                  <input
+                     id="register-password-repeat"
+                     name="register-password-repeat"
+                     type="password"
+                     placeholder="Passwort wiederholen"
+                     autocomplete="new-password"
+                     required
+                  />
+
+                  <button class="start-button login-submit" type="submit">Konto erstellen</button>
+               </form>
+
                <p class="login-message" id="login-message" role="status"></p>
             </div>
          </section>
       </main>
+      <script src="js/login.js"></script>
    </body>
 </html>
-
-
