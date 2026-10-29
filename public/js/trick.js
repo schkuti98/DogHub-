@@ -1,4 +1,3 @@
-﻿// TODO: Trickdaten später laden und die passende Anleitung auf der Seite anzeigen.
 // required.all: alle müssen gelernt sein. required.any: einer davon reicht.
 const tricks = {
    sitz: {
@@ -80,3 +79,25 @@ const tricks = {
    }
 };
 
+function formatRequiredTricks(trick) {
+   const allReq = trick?.required?.all ?? [];
+   const anyReq = trick?.required?.any ?? [];
+
+   if (allReq.length === 0 && anyReq.length === 0) {
+      return 'Keine';
+   }
+
+   const allNames = allReq.map((id) => tricks[id]?.name || id);
+   const anyNames = anyReq.map((id) => tricks[id]?.name || id);
+   const parts = [];
+
+   if (allNames.length > 0) {
+      parts.push(allNames.join(' und '));
+   }
+
+   if (anyNames.length > 0) {
+      parts.push(anyNames.join(' oder '));
+   }
+
+   return parts.join(' + ');
+}

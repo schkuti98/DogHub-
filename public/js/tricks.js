@@ -1,11 +1,11 @@
-function getTrickStatuses(dogId, tricks) {
+function getTrickStatuses(dogId, trickMap) {
    const progress = loadProgress();
    const done = progress[dogId] ?? {};
    const result = {};
 
-   for (const trickId of Object.keys(tricks)) {
+   for (const trickId of Object.keys(trickMap)) {
       const isDone = done[trickId] === true;
-      const unlocked = isTrickUnlocked(dogId, trickId, tricks);
+      const unlocked = isTrickUnlocked(dogId, trickId, trickMap);
 
       let status = 'locked';
       if (isDone) status = 'done';
@@ -17,37 +17,39 @@ function getTrickStatuses(dogId, tricks) {
    return result;
 }
 
-//  Render
-function renderTrickOverview(dogId, tricks) {
+function renderTrickOverview(dogId, trickMap) {
    const list = document.querySelector('.trick-list');
    if (!list) return;
 
-   const statuses = getTrickStatuses(dogId, tricks);
+   const statuses = getTrickStatuses(dogId, trickMap);
    const cards = [];
 
-   for (const [trickId, trick] of Object.entries(tricks)) {
+   for (const [trickId, trick] of Object.entries(trickMap)) {
       const state = statuses[trickId];
       const isLocked = state.status === 'locked';
+      const requiredText = formatRequiredTricks(trick);
       const stateLabel = state.status === 'done' ? 'Geschafft' : state.status === 'unlocked' ? 'Freigeschaltet' : 'Gesperrt';
 
       cards.push(`
          <a
-            class="trick-card ${state.status}"
+            class="trick-card trick-card-link ${state.status}"
             href="${isLocked ? '#' : `trick.html#${trickId}`}"
             data-trick-id="${trickId}"
             aria-disabled="${isLocked ? 'true' : 'false'}"
             tabindex="${isLocked ? '-1' : '0'}"
          >
+            <span class="schwierigkeit">${trick.stufe}</span>
             <h3>${trick.name}</h3>
-            <p>${trick.stufe}</p>
+            <p>${trick.beschreibung}</p>
+            <p><strong>Vorher lernen:</strong> ${requiredText}</p>
             <p class="trick-state">${stateLabel}</p>
+            <span class="start-button trick-open-button">Anleitung ansehen</span>
          </a>
       `);
    }
 
    list.innerHTML = cards.join('');
 
-   // Klick auf gesperrte Karten blockieren
    list.querySelectorAll('.trick-card.locked').forEach((card) => {
       card.addEventListener('click', (event) => {
          event.preventDefault();
@@ -55,8 +57,5 @@ function renderTrickOverview(dogId, tricks) {
    });
 }
 
-//  Init
-// TODO: dogId dynamisch aus Auswahl/Login holen
 const selectedDogId = localStorage.getItem('selectedDogId') || 'defaultDog';
-// `tricks` muss aus deiner Trick-Datenquelle kommen (z. B. global aus trick.js)
 renderTrickOverview(selectedDogId, tricks);

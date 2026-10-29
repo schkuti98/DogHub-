@@ -1,4 +1,5 @@
 // TODO: Server starten und die Routen einbinden.
+const path = require('path');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
 const express = require('express');
@@ -9,12 +10,16 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Routen einbinden
 const dogRoutes = require('./server/routes/dog');
+const authRoutes = require('./server/routes/auth');
 app.use('/dogs', dogRoutes);
+app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {
-   res.send('Willkommen');
+   res.redirect('/login.html');
 });
 
 app.use((req, res, next) => {

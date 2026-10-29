@@ -426,18 +426,35 @@ footer {
 
 /* Tricks-Seite */
 .trick-list {
-   flex-wrap: wrap;
-   align-items: flex-start;
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+   gap: 20px;
+   align-items: stretch;
 }
 
 .trick-card {
-   flex: 1 1 260px;
    min-width: 0;
    padding: 24px;
    border-radius: 12px;
    background-color: var(--main-color-3);
    color: var(--main-color-2);
    text-decoration: none;
+}
+
+.trick-card-link {
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+}
+
+.trick-card-link .trick-open-button {
+   margin-top: auto;
+   width: fit-content;
+}
+
+.trick-detail-card h2 {
+   margin-bottom: 10px;
+   text-transform: none;
 }
 
 .schwierigkeit {
@@ -605,9 +622,12 @@ nav a[aria-current='page'] {
       font-size: 24px;
    }
 
-   .dog-list,
-   .trick-list {
+   .dog-list {
       flex-direction: column;
+   }
+
+   .trick-list {
+      grid-template-columns: 1fr;
    }
 
    .dog-card,

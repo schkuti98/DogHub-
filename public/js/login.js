@@ -1,5 +1,4 @@
-﻿const CURRENT_USER_KEY = 'currentUser';
-const USERS_KEY = 'dogtrainer_users';
+const CURRENT_USER_KEY = 'currentUser';
 
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
@@ -15,22 +14,6 @@ function normalizeEmail(email) {
    return email.trim().toLowerCase();
 }
 
-function getUsers() {
-   const raw = localStorage.getItem(USERS_KEY);
-   if (!raw) return [];
-
-   try {
-      const users = JSON.parse(raw);
-      return Array.isArray(users) ? users : [];
-   } catch {
-      return [];
-   }
-}
-
-function saveUsers(users) {
-   localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
 function setCurrentUser(user, remember) {
    const payload = JSON.stringify(user);
 
@@ -42,6 +25,24 @@ function setCurrentUser(user, remember) {
 
    sessionStorage.setItem(CURRENT_USER_KEY, payload);
    localStorage.removeItem(CURRENT_USER_KEY);
+}
+
+async function postJson(url, payload) {
+   const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+   });
+
+   const data = await response.json().catch(() => ({}));
+
+   if (!response.ok) {
+      throw new Error(data.message || 'Ein Fehler ist aufgetreten.');
+   }
+
+   return data;
 }
 
 toggleRegisterButton?.addEventListener('click', () => {
@@ -57,7 +58,7 @@ toggleRegisterButton?.addEventListener('click', () => {
    setMessage('');
 });
 
-loginForm?.addEventListener('submit', (event) => {
+loginForm?.addEventListener('submit', async (event) => {
    event.preventDefault();
 
    const email = normalizeEmail(document.getElementById('email')?.value || '');
@@ -69,25 +70,17 @@ loginForm?.addEventListener('submit', (event) => {
       return;
    }
 
-   const users = getUsers();
-   const user = users.find((entry) => entry.email === email);
-
-   if (!user) {
-      setMessage('Kein Konto gefunden. Bitte zuerst registrieren.');
-      return;
+   try {
+      const data = await postJson('/auth/login', { email, password });
+      setCurrentUser(data.user, Boolean(remember));
+      setMessage(data.message || 'Erfolgreich angemeldet...');
+      window.location.href = 'index.html';
+   } catch (error) {
+      setMessage(error.message);
    }
-
-   if (user.password !== password) {
-      setMessage('Passwort ist falsch.');
-      return;
-   }
-
-   setCurrentUser({ email: user.email, loginAt: new Date().toISOString() }, Boolean(remember));
-   setMessage('Erfolgreich angemeldet...');
-   window.location.href = 'index.html';
 });
 
-registerForm?.addEventListener('submit', (event) => {
+registerForm?.addEventListener('submit', async (event) => {
    event.preventDefault();
 
    const email = normalizeEmail(document.getElementById('register-email')?.value || '');
@@ -109,18 +102,12 @@ registerForm?.addEventListener('submit', (event) => {
       return;
    }
 
-   const users = getUsers();
-   const alreadyExists = users.some((entry) => entry.email === email);
-
-   if (alreadyExists) {
-      setMessage('Für diese E-Mail existiert bereits ein Konto.');
-      return;
+   try {
+      const data = await postJson('/auth/register', { email, password });
+      registerForm.reset();
+      registerForm.setAttribute('hidden', '');
+      setMessage(data.message || 'Registrierung erfolgreich. Jetzt bitte anmelden.');
+   } catch (error) {
+      setMessage(error.message);
    }
-
-   users.push({ email, password, createdAt: new Date().toISOString() });
-   saveUsers(users);
-
-   registerForm.reset();
-   registerForm.setAttribute('hidden', '');
-   setMessage('Registrierung erfolgreich. Jetzt bitte anmelden.');
 });
