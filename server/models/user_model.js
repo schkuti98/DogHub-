@@ -1,9 +1,16 @@
-const mongoose = require('mongoose');
+﻿const mongoose = require('mongoose');
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema(
    {
+      // Rolle vorbereitet, default bleibt user
+      role: {
+         type: String,
+         enum: ['user', 'admin'],
+         default: 'user'
+      },
       email: {
+         // Login-Identität des Benutzers
          type: String,
          required: true,
          unique: true,
@@ -11,6 +18,7 @@ const userSchema = new mongoose.Schema(
          lowercase: true
       },
       passwordHash: {
+         // Gespeicherter Passwort-Hash (kein Klartext)
          type: String,
          required: true
       },
@@ -24,17 +32,20 @@ const userSchema = new mongoose.Schema(
       }
    },
    {
+      collection: 'users',
       versionKey: false
    }
 );
 
 function hashPassword(password) {
+   // Neues Passwort sicher hashen
    const salt = crypto.randomBytes(16).toString('hex');
    const hash = crypto.scryptSync(password, salt, 64).toString('hex');
    return `${salt}:${hash}`;
 }
 
 function verifyPassword(password, storedHash) {
+   // Login-Passwort gegen gespeicherten Hash prüfen
    if (!storedHash || !storedHash.includes(':')) {
       return false;
    }

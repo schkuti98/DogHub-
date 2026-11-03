@@ -1,28 +1,54 @@
-// TODO: Server starten und die Routen einbinden.
-const path = require('path');
+﻿const path = require('path');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv').config();
+require('dotenv').config();
+
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.json());
-
-app.use(express.urlencoded({ extended: true }));
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Routen einbinden
 const dogRoutes = require('./server/routes/dog');
 const authRoutes = require('./server/routes/auth');
+const tricksRoutes = require('./server/routes/tricks');
+const trainingRoutes = require('./server/routes/training');
+const pageRoutes = require('./server/routes/pages');
+const { attachAuthUser } = require('./server/middleware/session_auth');
+
+// EJS aktivieren
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Auth-User früh am Request verfügbar machen
+app.use(attachAuthUser);
+
+// Neue API-Pfade
+app.use('/api/dogs', dogRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/tricks', tricksRoutes);
+app.use('/api/training', trainingRoutes);
+
+// Legacy-Pfade bleiben kompatibel
 app.use('/dogs', dogRoutes);
 app.use('/auth', authRoutes);
 
+// EJS-Seitenrouten
+app.use(pageRoutes);
+
 app.get('/', (req, res) => {
-   res.redirect('/login.html');
+   res.redirect('/app/login');
 });
 
-app.use((req, res, next) => {
+app.get('/ejs-test', (req, res) => {
+   res.render('index', {
+      title: 'DogTrainer Hub',
+      currentPage: 'home'
+   });
+});
+
+app.use((req, res) => {
    res.status(404).send('Seite nicht gefunden');
 });
 
@@ -31,10 +57,14 @@ app.use((err, req, res, next) => {
    res.status(500).send('Interner Serverfehler');
 });
 
+// Eine zentrale MongoDB-Verbindung
 mongoose
-   .connect(process.env.MONGODB_URI)
+   .connect(process.env.MONGODB_URI, {
+      dbName: 'dogtrainerhub'
+   })
    .then(() => {
       console.log('MongoDB verbunden');
+      console.log('Verbundene Datenbank:', mongoose.connection.name);
       app.listen(port, () => {
          console.log(`Server läuft auf http://localhost:${port}`);
       });

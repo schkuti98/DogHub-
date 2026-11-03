@@ -1,0 +1,39 @@
+﻿<%# Trick-Übersicht mit dynamischer Kartenliste %>
+<%- include('partials/header', {
+   title: typeof title !== 'undefined' ? title : 'Tricks | DogTrainer Hub',
+   bodyClass: typeof bodyClass !== 'undefined' ? bodyClass : '',
+   extraCss: typeof extraCss !== 'undefined' ? extraCss : []
+}) %>
+<%- include('partials/navigation', {
+   currentPage: typeof currentPage !== 'undefined' ? currentPage : 'tricks',
+   showLogoutButton: true
+}) %>
+
+<main class="tricks-page">
+   <!-- Intro-Bereich -->
+   <section class="welcome">
+      <h1>Tricks üben</h1>
+      <p>Wähle einen Trick aus und schau dir die Anleitung an.</p>
+      <a class="start-button" href="#tricks-heading">Trick auswählen</a>
+   </section>
+
+   <!-- Zielcontainer für JS-Rendering -->
+   <section aria-labelledby="tricks-heading">
+      <h2 id="tricks-heading">Alle Tricks</h2>
+      <div class="trick-list" aria-live="polite"></div>
+   </section>
+
+   <!-- Fixer Trainingshinweis -->
+   <section class="training-tip">
+      <h2>Tipp fürs Training</h2>
+      <p>Übe lieber kurz und regelmäßig. Belohne kleine Fortschritte und gönne deinem Hund zwischendurch eine Pause.</p>
+   </section>
+</main>
+
+<%- include('partials/footer') %>
+<script type="module" src="/js/auth/guard.js"></script>
+<script type="module" src="/js/tricks/tricks-page.js"></script>
+</body>
+</html>
+
+

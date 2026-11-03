@@ -1,0 +1,38 @@
+﻿<%# Detailseite für einzelnen Trick %>
+<%- include('partials/header', {
+   title: typeof title !== 'undefined' ? title : 'Übung | DogTrainer Hub',
+   bodyClass: typeof bodyClass !== 'undefined' ? bodyClass : '',
+   extraCss: typeof extraCss !== 'undefined' ? extraCss : []
+}) %>
+<%- include('partials/navigation', {
+   currentPage: typeof currentPage !== 'undefined' ? currentPage : 'tricks',
+   showLogoutButton: true
+}) %>
+
+<main>
+   <!-- Zurück-Link zur Übersicht -->
+   <a class="back-link" href="/app/tricks">← Alle Tricks</a>
+
+   <section class="welcome">
+      <h1>Trick-Details</h1>
+      <p>Hier findest du die Anleitung und Voraussetzungen für einen einzelnen Trick.</p>
+   </section>
+
+   <!-- Wird von trick-detail.js gefüllt -->
+   <section class="trick-card trick-detail-card" id="trick-detail" aria-live="polite"></section>
+</main>
+
+<%- include('partials/footer') %>
+<script>
+   if (!window.location.hash) {
+      window.location.replace('/app/tricks');
+   }
+</script>
+<script type="module" src="/js/auth/guard.js"></script>
+<script type="module" src="/js/tricks/trick-detail-page.js"></script>
+</body>
+</html>
+
+
+
+

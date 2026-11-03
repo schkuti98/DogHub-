@@ -1,0 +1,27 @@
+﻿<!-- Hauptnavigation für alle Seiten -->
+<%
+const navShowLinks = typeof showNavLinks === 'undefined' ? true : showNavLinks !== false;
+const navCurrentPage = typeof currentPage !== 'undefined' ? currentPage : '';
+const navShowLogout = typeof showLogoutButton !== 'undefined' ? Boolean(showLogoutButton) : false;
+%>
+<header>
+   <nav aria-label="Hauptnavigation">
+      <a class="nav-brand" href="/app">DogTrainer Hub</a>
+      <%# Standard-Navigationslinks nur bei Bedarf anzeigen %>
+      <% if (navShowLinks) { %>
+         <ul>
+            <li><a href="/app" <%= navCurrentPage === 'home' ? 'aria-current="page"' : '' %>>Home</a></li>
+            <li><a href="/app/dogs" <%= navCurrentPage === 'dogs' ? 'aria-current="page"' : '' %>>Hunde</a></li>
+            <li><a href="/app/tricks" <%= navCurrentPage === 'tricks' ? 'aria-current="page"' : '' %>>Tricks</a></li>
+            <%# Admin-Link nur aktiv markieren, wenn Adminseite offen ist %>
+            <% if (navCurrentPage === 'admin') { %>
+               <li><a href="/admin" aria-current="page">Admin</a></li>
+            <% } %>
+         </ul>
+      <% } %>
+      <%# Logout-Button je nach Seite ein-/ausblenden %>
+      <% if (navShowLogout) { %>
+         <button id="logout-btn" class="login-text-button" type="button">Abmelden</button>
+      <% } %>
+   </nav>
+</header>

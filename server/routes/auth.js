@@ -1,5 +1,6 @@
-const express = require('express');
+﻿const express = require('express');
 const { User, hashPassword, verifyPassword } = require('../models/user_model');
+const { setSessionCookie, clearSessionCookie, requireAuthenticatedUser } = require('../middleware/session_auth');
 
 const router = express.Router();
 
@@ -7,6 +8,7 @@ function normalizeEmail(value = '') {
    return value.trim().toLowerCase();
 }
 
+// Registrierung mit bestehendem Passwort-Hashing
 router.post('/register', async (req, res, next) => {
    try {
       const email = normalizeEmail(req.body.email);
@@ -35,6 +37,7 @@ router.post('/register', async (req, res, next) => {
          message: 'Registrierung erfolgreich. Jetzt bitte anmelden.',
          user: {
             email: createdUser.email,
+            role: createdUser.role,
             createdAt: createdUser.createdAt
          }
       });
@@ -43,6 +46,7 @@ router.post('/register', async (req, res, next) => {
    }
 });
 
+// Login setzt jetzt zusätzlich Session-Cookie
 router.post('/login', async (req, res, next) => {
    try {
       const email = normalizeEmail(req.body.email);
@@ -65,16 +69,37 @@ router.post('/login', async (req, res, next) => {
       user.lastLoginAt = new Date();
       await user.save();
 
+      setSessionCookie(res, user);
+
       return res.json({
          message: 'Erfolgreich angemeldet...',
          user: {
+            id: String(user._id),
             email: user.email,
+            role: user.role,
             loginAt: user.lastLoginAt
          }
       });
    } catch (error) {
       return next(error);
    }
+});
+
+// Session sauber beenden
+router.post('/logout', (req, res) => {
+   clearSessionCookie(res);
+   return res.json({ message: 'Erfolgreich abgemeldet.' });
+});
+
+// Session-Status für geschützte Frontend-Checks
+router.get('/session', requireAuthenticatedUser, (req, res) => {
+   return res.json({
+      user: {
+         id: req.authUser.uid,
+         email: req.authUser.email,
+         role: req.authUser.role
+      }
+   });
 });
 
 module.exports = router;

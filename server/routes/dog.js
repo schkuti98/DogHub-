@@ -1,8 +1,11 @@
-const express = require('express');
+﻿const express = require('express');
 const dogModel = require('../models/dog_model');
+const { requireAuthenticatedUser } = require('../middleware/session_auth');
 
 const router = express.Router();
 const DOG_TEXT_REGEX = /^[A-Za-zÄÖÜäöüß\s-]{2,40}$/;
+
+router.use(requireAuthenticatedUser);
 
 function validateDogText(value, fieldName) {
    const text = String(value || '').trim();
@@ -20,7 +23,7 @@ function validateDogText(value, fieldName) {
 
 function normalizeAge(value) {
    if (value === undefined || value === null || value === '') {
-      return null;
+      return { age: null };
    }
 
    const age = Number(value);
@@ -34,7 +37,7 @@ function normalizeAge(value) {
 
 router.get('/', async (req, res, next) => {
    try {
-      const dogs = await dogModel.getAllDogs();
+      const dogs = await dogModel.getAllDogs(req.authUser.uid);
       return res.json(dogs);
    } catch (error) {
       return next(error);
@@ -49,7 +52,7 @@ router.get('/:id', async (req, res, next) => {
          return res.status(400).json({ message: 'Ungültige ID' });
       }
 
-      const dog = await dogModel.getDogById(dogId);
+      const dog = await dogModel.getDogById(dogId, req.authUser.uid);
 
       if (!dog) {
          return res.status(404).json({ message: 'Hund nicht gefunden' });
@@ -83,7 +86,8 @@ router.post('/', async (req, res, next) => {
       const createdDog = await dogModel.createDog({
          name: String(name).trim(),
          age: ageCheck.age,
-         breed: String(breed).trim()
+         breed: String(breed).trim(),
+         trainerUserId: req.authUser.uid
       });
       return res.status(201).json(createdDog);
    } catch (error) {
@@ -126,7 +130,7 @@ router.put('/:id', async (req, res, next) => {
          ...(age !== undefined ? { age: ageCheck.age } : {})
       };
 
-      const updatedDog = await dogModel.updateDog(dogId, updates);
+      const updatedDog = await dogModel.updateDog(dogId, updates, req.authUser.uid);
 
       if (!updatedDog) {
          return res.status(404).json({ message: 'Hund nicht gefunden' });
@@ -146,7 +150,7 @@ router.delete('/:id', async (req, res, next) => {
          return res.status(400).json({ message: 'Ungültige ID' });
       }
 
-      const deleted = await dogModel.deleteDog(dogId);
+      const deleted = await dogModel.deleteDog(dogId, req.authUser.uid);
 
       if (!deleted) {
          return res.status(404).json({ message: 'Hund nicht gefunden' });

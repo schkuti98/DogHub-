@@ -1,32 +1,22 @@
-const CURRENT_USER_KEY = 'currentUser';
+import { setCurrentUser } from './session.js';
 
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
 const toggleRegisterButton = document.getElementById('toggle-register');
 const message = document.getElementById('login-message');
 
+// Zeigt kurze Status-/Fehlermeldungen im UI
 function setMessage(text) {
    if (!message) return;
    message.textContent = text;
 }
 
+// Gleiche E-Mail-Normalisierung wie im Backend
 function normalizeEmail(email) {
    return email.trim().toLowerCase();
 }
 
-function setCurrentUser(user, remember) {
-   const payload = JSON.stringify(user);
-
-   if (remember) {
-      localStorage.setItem(CURRENT_USER_KEY, payload);
-      sessionStorage.removeItem(CURRENT_USER_KEY);
-      return;
-   }
-
-   sessionStorage.setItem(CURRENT_USER_KEY, payload);
-   localStorage.removeItem(CURRENT_USER_KEY);
-}
-
+// Hilfsfunktion für POST-JSON Requests
 async function postJson(url, payload) {
    const response = await fetch(url, {
       method: 'POST',
@@ -45,6 +35,7 @@ async function postJson(url, payload) {
    return data;
 }
 
+// Blendet das Register-Form ein/aus
 toggleRegisterButton?.addEventListener('click', () => {
    const isHidden = registerForm?.hasAttribute('hidden');
 
@@ -58,6 +49,7 @@ toggleRegisterButton?.addEventListener('click', () => {
    setMessage('');
 });
 
+// Login-Submit -> API /auth/login
 loginForm?.addEventListener('submit', async (event) => {
    event.preventDefault();
 
@@ -74,12 +66,13 @@ loginForm?.addEventListener('submit', async (event) => {
       const data = await postJson('/auth/login', { email, password });
       setCurrentUser(data.user, Boolean(remember));
       setMessage(data.message || 'Erfolgreich angemeldet...');
-      window.location.href = 'index.html';
+      window.location.href = '/app';
    } catch (error) {
       setMessage(error.message);
    }
 });
 
+// Register-Submit -> API /auth/register
 registerForm?.addEventListener('submit', async (event) => {
    event.preventDefault();
 

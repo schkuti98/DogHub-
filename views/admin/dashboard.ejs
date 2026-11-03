@@ -1,0 +1,35 @@
+﻿<%# Technische Basis für den geschützten Adminbereich %>
+<%- include('../partials/header', {
+   title: typeof title !== 'undefined' ? title : 'Admin | DogTrainer Hub',
+   bodyClass: typeof bodyClass !== 'undefined' ? bodyClass : '',
+   extraCss: typeof extraCss !== 'undefined' ? extraCss : []
+}) %>
+<%- include('../partials/navigation', {
+   currentPage: typeof currentPage !== 'undefined' ? currentPage : 'admin',
+   showLogoutButton: true
+}) %>
+
+<main>
+   <!-- Placeholder bis CRUD-Module folgen -->
+   <section class="welcome">
+      <h1>Adminbereich</h1>
+      <p>Diese Seite ist serverseitig geschützt. Die dynamischen CRUD-Funktionen folgen im nächsten Schritt.</p>
+      <a class="start-button" href="/app">Zurück zur App</a>
+   </section>
+
+   <!-- Aktueller Session-User zur Kontrolle -->
+   <section class="dog-profile" aria-labelledby="admin-info-heading">
+      <h2 id="admin-info-heading">Technische Grundlage aktiv</h2>
+      <p>Angemeldet als: <strong><%= (typeof authUser !== 'undefined' && authUser?.email) ? authUser.email : '-' %></strong></p>
+      <p>Rolle: <strong><%= (typeof authUser !== 'undefined' && authUser?.role) ? authUser.role : '-' %></strong></p>
+      <p>Geplante Module: Kunden, Hunde, Übungen, Fortschritt und Trainingsnotizen.</p>
+   </section>
+</main>
+
+<%- include('../partials/footer') %>
+<script type="module" src="/js/auth/logout-button.js"></script>
+</body>
+</html>
+
+
+

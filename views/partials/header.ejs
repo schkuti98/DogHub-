@@ -1,0 +1,22 @@
+﻿<%# Globaler Header + gemeinsame Styles %>
+<%
+const pageTitle = typeof title !== 'undefined' && title ? title : 'DogTrainer Hub';
+const pageBodyClass = typeof bodyClass !== 'undefined' ? bodyClass : '';
+const cssList = Array.isArray(typeof extraCss !== 'undefined' ? extraCss : null) ? extraCss : [];
+%>
+<!doctype html>
+<html lang="de">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title><%= pageTitle %></title>
+      <%# Seiten-spezifische CSS-Dateien optional laden %>
+      <% if (cssList.length > 0) { %>
+         <% cssList.forEach((cssHref) => { %>
+            <link rel="stylesheet" href="<%= cssHref %>" />
+         <% }); %>
+      <% } %>
+      <%# Basis-Styles für die ganze App %>
+      <link rel="stylesheet" href="/css/style.css" />
+   </head>
+   <body class="<%= pageBodyClass %>">

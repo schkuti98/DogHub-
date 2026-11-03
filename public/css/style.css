@@ -380,25 +380,25 @@ footer {
    }
 }
 
-.zurueck {
+.back-link {
    display: inline-block;
    margin-bottom: 20px;
    color: var(--main-color-2);
 }
 
-.trick-formular {
+.trick-form {
    margin-top: 30px;
    padding-top: 24px;
    border-top: 1px solid var(--main-color-1);
 }
 
-.trick-formular label {
+.trick-form label {
    display: block;
    margin-bottom: 10px;
    font-weight: bold;
 }
 
-.trick-formular select {
+.trick-form select {
    width: 100%;
    max-width: 300px;
    padding: 12px;
@@ -409,18 +409,18 @@ footer {
    font: inherit;
 }
 
-.trick-formular button {
+.trick-form button {
    border: 0;
    font-family: inherit;
    cursor: pointer;
 }
 
-.trick-formular button:disabled {
+.trick-form button:disabled {
    background-color: var(--main-color-2);
    cursor: default;
 }
 
-.speicher-hinweis {
+.status-note {
    margin-top: 24px;
 }
 
@@ -457,7 +457,7 @@ footer {
    text-transform: none;
 }
 
-.schwierigkeit {
+.difficulty-badge {
    display: inline-block;
    padding: 7px 10px;
    margin-bottom: 20px;
@@ -677,3 +677,4 @@ nav a[aria-current='page'] {
    font-weight: 700;
    font-size: 0.9rem;
 }
+
