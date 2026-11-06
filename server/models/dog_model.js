@@ -26,6 +26,10 @@ const dogSchema = new mongoose.Schema(
          required: true,
          trim: true
       },
+      photoId: {
+         type: mongoose.Schema.Types.ObjectId,
+         default: null
+      },
       customerId: {
          // Optionaler Besitzer/Kunde des Hundes
          type: mongoose.Schema.Types.ObjectId,
@@ -103,7 +107,8 @@ async function updateDog(id, updates, trainerUserId) {
    const updateData = {
       ...(updates.name !== undefined ? { name: updates.name } : {}),
       ...(updates.breed !== undefined ? { breed: updates.breed } : {}),
-      ...(updates.age !== undefined ? { age: normalizeAge(updates.age) } : {})
+      ...(updates.age !== undefined ? { age: normalizeAge(updates.age) } : {}),
+      ...(updates.photoId !== undefined ? { photoId: updates.photoId } : {})
    };
 
    return Dog.findOneAndUpdate(

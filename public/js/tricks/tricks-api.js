@@ -10,6 +10,7 @@ function mapTrickFromApi(apiTrick) {
       id: String(apiTrick.id),
       name: apiTrick.name,
       description: apiTrick.description,
+      createdAt: apiTrick.createdAt,
       levelLabel: `${categoryName} · ${difficultyText}`,
       required: {
          all: (apiTrick.prerequisiteAll || []).map((id) => String(id)),

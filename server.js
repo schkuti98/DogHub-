@@ -10,6 +10,7 @@ const dogRoutes = require('./server/routes/dog');
 const authRoutes = require('./server/routes/auth');
 const tricksRoutes = require('./server/routes/tricks');
 const trainingRoutes = require('./server/routes/training');
+const adminRoutes = require('./server/routes/admin');
 const pageRoutes = require('./server/routes/pages');
 const { attachAuthUser } = require('./server/middleware/session_auth');
 
@@ -19,7 +20,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), { index: false }));
 
 // Auth-User früh am Request verfügbar machen
 app.use(attachAuthUser);
@@ -29,6 +30,7 @@ app.use('/api/dogs', dogRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/tricks', tricksRoutes);
 app.use('/api/training', trainingRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Legacy-Pfade bleiben kompatibel
 app.use('/dogs', dogRoutes);

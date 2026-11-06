@@ -149,6 +149,30 @@ h3 {
    font-size: 30px;
 }
 
+.dog-photo {
+   object-fit: cover;
+}
+
+.dog-photo-upload {
+   position: relative;
+   overflow: hidden;
+   cursor: pointer;
+}
+
+.dog-photo-upload input {
+   position: absolute;
+   width: 1px;
+   height: 1px;
+   overflow: hidden;
+   clip: rect(0, 0, 0, 0);
+   white-space: nowrap;
+}
+
+.dog-photo-upload:focus-within {
+   outline: 2px solid var(--main-color-2);
+   outline-offset: 2px;
+}
+
 .dog-card p,
 .trick-card p {
    margin: 0;
@@ -513,6 +537,120 @@ footer {
    background-color: var(--main-color-3);
 }
 
+.admin-page {
+   display: grid;
+   gap: 24px;
+}
+
+.admin-section {
+   min-width: 0;
+}
+
+.admin-section h2 {
+   margin-bottom: 20px;
+}
+
+.admin-section h3 {
+   margin-top: 28px;
+}
+
+.admin-form {
+   display: grid;
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 16px;
+   margin-bottom: 24px;
+}
+
+.admin-form label {
+   display: grid;
+   gap: 7px;
+   font-weight: bold;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select,
+.admin-table select {
+   width: 100%;
+   padding: 10px 12px;
+   border: 1px solid var(--main-color-2);
+   border-radius: 6px;
+   background-color: var(--main-color-1);
+   color: var(--main-color-2);
+   font: inherit;
+}
+
+.admin-form select[multiple] {
+   min-height: 120px;
+}
+
+.admin-form textarea {
+   resize: vertical;
+}
+
+.admin-wide {
+   grid-column: 1 / -1;
+}
+
+.admin-form-actions,
+.admin-actions {
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   gap: 8px;
+}
+
+.admin-secondary-button {
+   padding: 8px 12px;
+   border: 1px solid var(--main-color-2);
+   border-radius: 6px;
+   background: transparent;
+   color: var(--main-color-2);
+   font: inherit;
+   cursor: pointer;
+}
+
+.admin-secondary-button:hover {
+   background: var(--main-color-1);
+}
+
+.admin-table-wrap {
+   width: 100%;
+   overflow-x: auto;
+}
+
+.admin-table {
+   width: 100%;
+   border-collapse: collapse;
+   text-align: left;
+}
+
+.admin-table th,
+.admin-table td {
+   padding: 12px 10px;
+   border-bottom: 1px solid var(--main-color-1);
+   vertical-align: top;
+}
+
+.admin-table th {
+   white-space: nowrap;
+}
+
+.admin-table select {
+   min-width: 130px;
+}
+
+.admin-note-text {
+   min-width: 220px;
+   max-width: 440px;
+   white-space: pre-wrap;
+   overflow-wrap: anywhere;
+}
+
+.admin-page > .login-message {
+   margin: 0;
+}
+
 .profile-header {
    display: flex;
    align-items: center;
@@ -603,6 +741,14 @@ nav a[aria-current='page'] {
       flex-direction: column;
       gap: 28px;
    }
+
+   .admin-form {
+      grid-template-columns: 1fr;
+   }
+
+   .admin-wide {
+      grid-column: auto;
+   }
 }
 
 @media (max-width: 540px) {
@@ -677,4 +823,3 @@ nav a[aria-current='page'] {
    font-weight: 700;
    font-size: 0.9rem;
 }
-

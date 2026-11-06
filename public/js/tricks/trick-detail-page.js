@@ -48,7 +48,9 @@ function renderTrickDetail({ trickId, trick, trickMap, dogs, selectedDogId, done
    if (!trickDetailContainer) return;
 
    const requiredText = formatRequiredTricks(trick, trickMap);
-   const instructions = (trick.steps && trick.steps.length > 0 ? trick.steps : ['Noch keine Schritt-für-Schritt-Anleitung gespeichert.'])
+   const instructions = (
+      trick.steps && trick.steps.length > 0 ? trick.steps : ['Noch keine Schritt-für-Schritt-Anleitung gespeichert.']
+   )
       .map((step) => `<li>${step}</li>`)
       .join('');
 
@@ -101,9 +103,7 @@ async function initializeTrickDetail() {
       const trick = trickMap[trickId];
       const selectedDogId = getSelectedDogId(dogs);
 
-      const trainingState = selectedDogId
-         ? await loadTrainingStateForDog(selectedDogId)
-         : { doneSet: new Set() };
+      const trainingState = selectedDogId ? await loadTrainingStateForDog(selectedDogId) : { doneSet: new Set() };
 
       renderTrickDetail({
          trickId,

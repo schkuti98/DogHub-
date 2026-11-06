@@ -1,4 +1,4 @@
-import { fetchDogs, createDog, updateDog, deleteDog } from './dogs-api.js';
+import { fetchDogs, createDog, updateDog, deleteDog, uploadDogPhoto } from './dogs-api.js';
 import { validateDogText, validateDogAge } from './dog-validation.js';
 
 const dogForm = document.getElementById('dog-form');
@@ -9,6 +9,16 @@ function setMessage(text, isError = false) {
    if (!dogMessage) return;
    dogMessage.textContent = text;
    dogMessage.style.color = isError ? '#c0392b' : '';
+}
+
+function escapeHtml(value) {
+   return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+   })[character]);
 }
 
 function renderDogs(dogs) {
@@ -23,19 +33,21 @@ function renderDogs(dogs) {
       .map(
          (dog) => `
             <article class="dog-card">
-               <div class="dog-picture" aria-hidden="true">🐕</div>
+               ${dog.photoUrl
+                  ? `<img class="dog-picture dog-photo" src="${escapeHtml(dog.photoUrl)}" alt="Foto von ${escapeHtml(dog.name)}">`
+                  : '<div class="dog-picture" aria-hidden="true">🐕</div>'}
                <div>
-                  <h3>${dog.name}</h3>
-                  <p>${dog.breed}</p>
-                  <p>Alter: ${dog.age ?? 'unbekannt'}</p>
+                  <h3>${escapeHtml(dog.name)}</h3>
+                  <p>${escapeHtml(dog.breed)}</p>
+                  <p>Alter: ${escapeHtml(dog.age ?? 'unbekannt')}</p>
                   <button
                      class="btn btn-outline-light btn-sm mt-2 me-2"
                      type="button"
                      data-action="edit"
-                     data-dog-id="${dog.id}"
-                     data-dog-name="${dog.name}"
-                     data-dog-breed="${dog.breed}"
-                     data-dog-age="${dog.age ?? ''}"
+                     data-dog-id="${escapeHtml(dog.id)}"
+                     data-dog-name="${escapeHtml(dog.name)}"
+                     data-dog-breed="${escapeHtml(dog.breed)}"
+                     data-dog-age="${escapeHtml(dog.age ?? '')}"
                   >
                      Hund bearbeiten
                   </button>
@@ -43,11 +55,21 @@ function renderDogs(dogs) {
                      class="btn btn-outline-danger btn-sm mt-2"
                      type="button"
                      data-action="delete"
-                     data-dog-id="${dog.id}"
-                     data-dog-name="${dog.name}"
+                     data-dog-id="${escapeHtml(dog.id)}"
+                     data-dog-name="${escapeHtml(dog.name)}"
                   >
                      Hund löschen
                   </button>
+                  <label class="btn btn-outline-light btn-sm mt-2 dog-photo-upload">
+                     ${dog.photoUrl ? 'Foto ändern' : 'Foto hochladen'}
+                     <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        data-action="upload-photo"
+                        data-dog-id="${escapeHtml(dog.id)}"
+                        aria-label="Foto für ${escapeHtml(dog.name)} hochladen"
+                     >
+                  </label>
                </div>
             </article>
          `
@@ -104,8 +126,8 @@ async function handleDeleteDog(button, dogId) {
    if (!confirmed) return;
 
    try {
-      await deleteDog(dogId);
-      setMessage('Hund erfolgreich gelöscht.');
+      const result = await deleteDog(dogId);
+      setMessage(result?.warning ? `${result.message} ${result.warning}` : 'Hund erfolgreich gelöscht.');
       await loadDogs();
    } catch (error) {
       setMessage(error.message, true);
@@ -158,6 +180,25 @@ dogList?.addEventListener('click', async (event) => {
 
    if (action === 'edit') {
       await handleEditDog(button, dogId);
+   }
+});
+
+dogList?.addEventListener('change', async (event) => {
+   const input = event.target.closest('input[data-action="upload-photo"][data-dog-id]');
+   const photo = input?.files?.[0];
+   const dogId = input?.getAttribute('data-dog-id');
+   if (!input || !photo || !dogId) return;
+
+   input.disabled = true;
+   try {
+      const result = await uploadDogPhoto(dogId, photo);
+      setMessage(result.warning ? `${result.message} ${result.warning}` : result.message);
+      await loadDogs();
+   } catch (error) {
+      setMessage(error.message, true);
+   } finally {
+      input.disabled = false;
+      input.value = '';
    }
 });
 

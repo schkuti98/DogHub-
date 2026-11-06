@@ -13,9 +13,8 @@ const navShowLogout = typeof showLogoutButton !== 'undefined' ? Boolean(showLogo
             <li><a href="/app" <%= navCurrentPage === 'home' ? 'aria-current="page"' : '' %>>Home</a></li>
             <li><a href="/app/dogs" <%= navCurrentPage === 'dogs' ? 'aria-current="page"' : '' %>>Hunde</a></li>
             <li><a href="/app/tricks" <%= navCurrentPage === 'tricks' ? 'aria-current="page"' : '' %>>Tricks</a></li>
-            <%# Admin-Link nur aktiv markieren, wenn Adminseite offen ist %>
-            <% if (navCurrentPage === 'admin') { %>
-               <li><a href="/admin" aria-current="page">Admin</a></li>
+            <% if (typeof authUser !== 'undefined' && authUser?.role === 'admin') { %>
+               <li><a href="/admin" <%= navCurrentPage === 'admin' ? 'aria-current="page"' : '' %>>Admin</a></li>
             <% } %>
          </ul>
       <% } %>

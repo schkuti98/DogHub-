@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const { requireAuthenticatedUser, requireAdmin } = require('../middleware/session_auth');
 const { Trick } = require('../models/trick_model');
-require('../models/category_model');
+const { Category } = require('../models/category_model');
 
 const router = express.Router();
 
@@ -13,6 +13,7 @@ function toClientTrick(trickDoc) {
       id: String(trickDoc._id),
       name: trickDoc.name,
       description: trickDoc.description,
+      createdAt: trickDoc.createdAt,
       difficulty: trickDoc.difficulty,
       category: trickDoc.categoryId
          ? {
@@ -33,6 +34,23 @@ function toClientTrick(trickDoc) {
 function normalizeRefArray(value) {
    if (!Array.isArray(value)) return [];
    return value.filter(Boolean).map((id) => String(id));
+}
+
+function normalizeSteps(value) {
+   if (!Array.isArray(value)) {
+      return { error: 'Die Anleitung muss als Liste von Schritten angegeben werden.' };
+   }
+
+   const steps = value.map((step, index) => {
+      const text = typeof step === 'string' ? step.trim() : String(step?.text || '').trim();
+      return { order: index + 1, text };
+   });
+
+   if (steps.some((step) => !step.text || step.text.length > 1000)) {
+      return { error: 'Jeder Anleitungsschritt muss Text enthalten (max. 1000 Zeichen).' };
+   }
+
+   return { steps };
 }
 
 function isCycleAfterUpdate(startId, allTricks, prerequisitesById) {
@@ -77,6 +95,76 @@ router.get('/', async (req, res, next) => {
    }
 });
 
+router.post('/', requireAdmin, async (req, res, next) => {
+   try {
+      const name = typeof req.body.name === 'string' ? req.body.name.trim() : '';
+      const description = typeof req.body.description === 'string' ? req.body.description.trim() : '';
+      const difficulty = typeof req.body.difficulty === 'string' ? req.body.difficulty.trim().toLowerCase() : '';
+      const categoryId = String(req.body.categoryId || '');
+
+      if (!name || name.length > 100) {
+         return res.status(400).json({ message: 'Name ist erforderlich (max. 100 Zeichen).' });
+      }
+
+      if (!description || description.length > 3000) {
+         return res.status(400).json({ message: 'Beschreibung ist erforderlich (max. 3000 Zeichen).' });
+      }
+
+      if (!['leicht', 'mittel', 'schwer'].includes(difficulty)) {
+         return res.status(400).json({ message: 'Ungültiger Schwierigkeitsgrad.' });
+      }
+
+      if (!mongoose.isValidObjectId(categoryId) || !(await Category.exists({ _id: categoryId }))) {
+         return res.status(400).json({ message: 'Ungültige Kategorie-ID.' });
+      }
+
+      const stepsCheck = normalizeSteps(req.body.steps || []);
+      if (stepsCheck.error) {
+         return res.status(400).json({ message: stepsCheck.error });
+      }
+
+      const prerequisiteAll = normalizeRefArray(req.body.prerequisiteAll);
+      const prerequisiteAny = normalizeRefArray(req.body.prerequisiteAny);
+      const prerequisites = [...new Set([...prerequisiteAll, ...prerequisiteAny])];
+
+      if (prerequisites.some((id) => !mongoose.isValidObjectId(id))) {
+         return res.status(400).json({ message: 'Ungültige Voraussetzung-ID enthalten.' });
+      }
+
+      if (prerequisites.length > 0) {
+         const existingCount = await Trick.countDocuments({ _id: { $in: prerequisites } });
+         if (existingCount !== prerequisites.length) {
+            return res.status(400).json({ message: 'Mindestens eine Voraussetzung verweist auf einen unbekannten Trick.' });
+         }
+      }
+
+      const trick = await Trick.create({
+         name,
+         description,
+         categoryId,
+         difficulty,
+         steps: stepsCheck.steps,
+         prerequisiteAll,
+         prerequisiteAny,
+         isActive: true
+      });
+
+      const createdTrick = await Trick.findById(trick._id)
+         .populate({ path: 'categoryId', select: 'name' })
+         .lean();
+
+      return res.status(201).json({
+         message: 'Trick erfolgreich angelegt.',
+         trick: toClientTrick(createdTrick)
+      });
+   } catch (error) {
+      if (error?.code === 11000) {
+         return res.status(409).json({ message: 'Ein Trick mit diesem Namen existiert bereits in der Kategorie.' });
+      }
+      return next(error);
+   }
+});
+
 router.get('/:id', async (req, res, next) => {
    try {
       if (!mongoose.isValidObjectId(req.params.id)) {
@@ -114,16 +202,16 @@ router.put('/:id', requireAdmin, async (req, res, next) => {
 
       if (typeof req.body.name === 'string') {
          const name = req.body.name.trim();
-         if (!name) {
-            return res.status(400).json({ message: 'Name darf nicht leer sein.' });
+         if (!name || name.length > 100) {
+            return res.status(400).json({ message: 'Name darf nicht leer sein (max. 100 Zeichen).' });
          }
          updateData.name = name;
       }
 
       if (typeof req.body.description === 'string') {
          const description = req.body.description.trim();
-         if (!description) {
-            return res.status(400).json({ message: 'Beschreibung darf nicht leer sein.' });
+         if (!description || description.length > 3000) {
+            return res.status(400).json({ message: 'Beschreibung darf nicht leer sein (max. 3000 Zeichen).' });
          }
          updateData.description = description;
       }
@@ -140,8 +228,19 @@ router.put('/:id', requireAdmin, async (req, res, next) => {
          updateData.isActive = req.body.isActive;
       }
 
+      if (req.body.steps !== undefined) {
+         const stepsCheck = normalizeSteps(req.body.steps);
+         if (stepsCheck.error) {
+            return res.status(400).json({ message: stepsCheck.error });
+         }
+         updateData.steps = stepsCheck.steps;
+      }
+
       if (req.body.categoryId !== undefined) {
-         if (!mongoose.isValidObjectId(req.body.categoryId)) {
+         if (
+            !mongoose.isValidObjectId(req.body.categoryId) ||
+            !(await Category.exists({ _id: req.body.categoryId }))
+         ) {
             return res.status(400).json({ message: 'Ungültige Kategorie-ID.' });
          }
          updateData.categoryId = req.body.categoryId;
@@ -209,9 +308,33 @@ router.put('/:id', requireAdmin, async (req, res, next) => {
          trick: toClientTrick(updatedTrick)
       });
    } catch (error) {
+      if (error?.code === 11000) {
+         return res.status(409).json({ message: 'Ein Trick mit diesem Namen existiert bereits in der Kategorie.' });
+      }
+      return next(error);
+   }
+});
+
+router.delete('/:id', requireAdmin, async (req, res, next) => {
+   try {
+      if (!mongoose.isValidObjectId(req.params.id)) {
+         return res.status(400).json({ message: 'Ungültige Trick-ID.' });
+      }
+
+      const trick = await Trick.findByIdAndUpdate(
+         req.params.id,
+         { $set: { isActive: false } },
+         { returnDocument: 'after' }
+      );
+
+      if (!trick) {
+         return res.status(404).json({ message: 'Trick nicht gefunden.' });
+      }
+
+      return res.json({ message: 'Trick deaktiviert.' });
+   } catch (error) {
       return next(error);
    }
 });
 
 module.exports = router;
-

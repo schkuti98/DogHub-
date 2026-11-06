@@ -26,31 +26,19 @@
       <a class="add-dog" href="/app/dogs">+ Hund hinzufügen</a>
    </section>
 
-   <!-- Schnellzugriff auf Tricks -->
+   <!-- Neuester Trick -->
    <section class="tricks">
-      <h2>Alle Tricks</h2>
+      <h2>Neuester Trick</h2>
       <div class="trick-list">
-         <a class="trick-card" href="/app/trick#sitz">
-            <h3>Sitz</h3>
-            <p>Grundgehorsam · Leicht</p>
-         </a>
-         <a class="trick-card" href="/app/trick#rolle">
-            <h3>Rolle</h3>
-            <p>Tricks · Mittel</p>
-         </a>
-         <a class="trick-card" href="/app/trick#criss-cross">
-            <h3>Criss Cross</h3>
-            <p>Tricks · Schwer</p>
-         </a>
+         <p>Trick wird geladen...</p>
       </div>
    </section>
 </main>
 
 <%- include('partials/footer') %>
 <script type="module" src="/js/auth/guard.js"></script>
-<script type="module" src="/js/tricks/tricks-page.js"></script>
+<script type="module" src="/js/tricks/home-trick.js"></script>
 <script type="module" src="/js/dogs/home-dogs.js"></script>
 </body>
 </html>
-
 

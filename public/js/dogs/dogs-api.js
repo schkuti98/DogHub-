@@ -43,6 +43,17 @@ export async function createDog(payload) {
    return readJsonResponse(response);
 }
 
+export async function uploadDogPhoto(dogId, photo) {
+   const formData = new FormData();
+   formData.append('photo', photo);
+
+   const response = await fetch(`/dogs/${encodeURIComponent(dogId)}/photo`, {
+      method: 'POST',
+      body: formData
+   });
+   return readJsonResponse(response, 'Das Hundefoto konnte nicht gespeichert werden.');
+}
+
 export async function updateDog(dogId, payload) {
    const response = await fetch(`/dogs/${dogId}`, {
       method: 'PUT',
@@ -60,4 +71,6 @@ export async function deleteDog(dogId) {
       const data = await response.json().catch(() => ({}));
       throw new Error(data.message || 'Hund konnte nicht gelöscht werden.');
    }
+
+   return response.status === 204 ? null : response.json();
 }

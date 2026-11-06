@@ -25,28 +25,32 @@ router.get('/app/login', (req, res) => {
 router.get('/app', requireAppSession, (req, res) => {
    return res.render('index', {
       title: 'Dog Hub',
-      currentPage: 'home'
+      currentPage: 'home',
+      authUser: req.authUser
    });
 });
 
 router.get('/app/dogs', requireAppSession, (req, res) => {
    return res.render('dogs', {
       title: 'Meine Hunde | DogTrainer Hub',
-      currentPage: 'dogs'
+      currentPage: 'dogs',
+      authUser: req.authUser
    });
 });
 
 router.get('/app/tricks', requireAppSession, (req, res) => {
    return res.render('tricks', {
       title: 'Tricks | DogTrainer Hub',
-      currentPage: 'tricks'
+      currentPage: 'tricks',
+      authUser: req.authUser
    });
 });
 
 router.get('/app/trick', requireAppSession, (req, res) => {
    return res.render('trick', {
       title: 'Übung | DogTrainer Hub',
-      currentPage: 'tricks'
+      currentPage: 'tricks',
+      authUser: req.authUser
    });
 });
 

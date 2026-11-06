@@ -2,6 +2,16 @@ import { fetchDogs } from './dogs-api.js';
 
 const homeDogList = document.getElementById('home-dog-list');
 
+function escapeHtml(value) {
+   return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+   })[character]);
+}
+
 function renderHomeDogs(dogs) {
    if (!homeDogList) return;
 
@@ -15,11 +25,13 @@ function renderHomeDogs(dogs) {
       .map(
          (dog) => `
          <article class="dog-card">
-            <div class="dog-picture" aria-hidden="true">🐕</div>
+            ${dog.photoUrl
+               ? `<img class="dog-picture dog-photo" src="${escapeHtml(dog.photoUrl)}" alt="Foto von ${escapeHtml(dog.name)}">`
+               : '<div class="dog-picture" aria-hidden="true">🐕</div>'}
             <div>
-               <h3>${dog.name}</h3>
-               <p>${dog.breed}</p>
-               <p>Alter: ${dog.age ?? 'unbekannt'}</p>
+               <h3>${escapeHtml(dog.name)}</h3>
+               <p>${escapeHtml(dog.breed)}</p>
+               <p>Alter: ${escapeHtml(dog.age ?? 'unbekannt')}</p>
             </div>
          </article>
       `

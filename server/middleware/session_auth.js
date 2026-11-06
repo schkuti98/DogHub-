@@ -1,4 +1,5 @@
 ﻿const crypto = require('crypto');
+const { User } = require('../models/user_model');
 
 const SESSION_COOKIE_NAME = 'dth_session';
 const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 12;
@@ -121,16 +122,26 @@ function requireAuthenticatedUser(req, res, next) {
 }
 
 // Harte Admin-Sperre für geschützte Routen
-function requireAdmin(req, res, next) {
+async function requireAdmin(req, res, next) {
    if (!req.authUser) {
       return res.status(401).json({ message: 'Nicht angemeldet.' });
    }
 
-   if (req.authUser.role !== 'admin') {
-      return res.status(403).json({ message: 'Admin-Berechtigung erforderlich.' });
-   }
+   try {
+      const user = await User.findById(req.authUser.uid).select('role').lean();
+      if (!user) {
+         return res.status(401).json({ message: 'Nicht angemeldet.' });
+      }
 
-   return next();
+      if (user.role !== 'admin') {
+         return res.status(403).json({ message: 'Admin-Berechtigung erforderlich.' });
+      }
+
+      req.authUser.role = user.role;
+      return next();
+   } catch (error) {
+      return next(error);
+   }
 }
 
 module.exports = {

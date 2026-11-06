@@ -1,4 +1,3 @@
-﻿<%# Technische Basis für den geschützten Adminbereich %>
 <%- include('../partials/header', {
    title: typeof title !== 'undefined' ? title : 'Admin | DogTrainer Hub',
    bodyClass: typeof bodyClass !== 'undefined' ? bodyClass : '',
@@ -6,30 +5,94 @@
 }) %>
 <%- include('../partials/navigation', {
    currentPage: typeof currentPage !== 'undefined' ? currentPage : 'admin',
-   showLogoutButton: true
+   showLogoutButton: true,
+   authUser
 }) %>
 
-<main>
-   <!-- Placeholder bis CRUD-Module folgen -->
+<main class="admin-page">
    <section class="welcome">
       <h1>Adminbereich</h1>
-      <p>Diese Seite ist serverseitig geschützt. Die dynamischen CRUD-Funktionen folgen im nächsten Schritt.</p>
-      <a class="start-button" href="/app">Zurück zur App</a>
+      <p>Tricks, Benutzer, Hunde, Trainingsfortschritte und Notizen verwalten.</p>
    </section>
 
-   <!-- Aktueller Session-User zur Kontrolle -->
-   <section class="dog-profile" aria-labelledby="admin-info-heading">
-      <h2 id="admin-info-heading">Technische Grundlage aktiv</h2>
-      <p>Angemeldet als: <strong><%= (typeof authUser !== 'undefined' && authUser?.email) ? authUser.email : '-' %></strong></p>
-      <p>Rolle: <strong><%= (typeof authUser !== 'undefined' && authUser?.role) ? authUser.role : '-' %></strong></p>
-      <p>Geplante Module: Kunden, Hunde, Übungen, Fortschritt und Trainingsnotizen.</p>
+   <p class="login-message" id="admin-message" role="status" aria-live="polite"></p>
+
+   <section class="dog-profile admin-section" aria-labelledby="trick-admin-heading">
+      <h2 id="trick-admin-heading">Tricks verwalten</h2>
+      <form id="admin-trick-form" class="admin-form">
+         <input type="hidden" name="trickId">
+         <label>Name <input name="name" maxlength="100" required></label>
+         <label>Beschreibung <textarea name="description" maxlength="3000" required></textarea></label>
+         <label>Kategorie <select name="categoryId" required></select></label>
+         <label>Schwierigkeit
+            <select name="difficulty" required>
+               <option value="leicht">Leicht</option>
+               <option value="mittel">Mittel</option>
+               <option value="schwer">Schwer</option>
+            </select>
+         </label>
+         <label>Alle diese Voraussetzungen (Mehrfachauswahl)
+            <select name="prerequisiteAll" multiple size="4"></select>
+         </label>
+         <label>Mindestens eine dieser Voraussetzungen (Mehrfachauswahl)
+            <select name="prerequisiteAny" multiple size="4"></select>
+         </label>
+         <label class="admin-wide">Anleitung (ein Schritt pro Zeile)
+            <textarea name="steps" rows="5"></textarea>
+         </label>
+         <div class="admin-form-actions admin-wide">
+            <button class="start-button" type="submit" id="admin-trick-save">Trick anlegen</button>
+            <button class="admin-secondary-button" type="button" id="admin-trick-cancel" hidden>Bearbeitung abbrechen</button>
+         </div>
+      </form>
+      <div class="admin-table-wrap">
+         <table class="admin-table">
+            <thead><tr><th>Trick</th><th>Kategorie</th><th>Schwierigkeit</th><th>Status</th><th>Aktionen</th></tr></thead>
+            <tbody id="admin-tricks"></tbody>
+         </table>
+      </div>
+   </section>
+
+   <section class="dog-profile admin-section" aria-labelledby="users-admin-heading">
+      <h2 id="users-admin-heading">Benutzer und Rollen</h2>
+      <div class="admin-table-wrap">
+         <table class="admin-table">
+            <thead><tr><th>E-Mail</th><th>Rolle</th><th>Registriert</th><th>Letzter Login</th><th>Aktion</th></tr></thead>
+            <tbody id="admin-users"></tbody>
+         </table>
+      </div>
+   </section>
+
+   <section class="dog-profile admin-section" aria-labelledby="dogs-admin-heading">
+      <h2 id="dogs-admin-heading">Hunde und Trainingsfortschritt</h2>
+      <div class="admin-table-wrap">
+         <table class="admin-table">
+            <thead><tr><th>Hund</th><th>Rasse</th><th>Alter</th><th>Benutzer</th><th>Aktion</th></tr></thead>
+            <tbody id="admin-dogs"></tbody>
+         </table>
+      </div>
+      <h3>Trainingsfortschritte</h3>
+      <div class="admin-table-wrap">
+         <table class="admin-table">
+            <thead><tr><th>Hund</th><th>Trick</th><th>Versuche</th><th>Zuletzt trainiert</th><th>Status</th></tr></thead>
+            <tbody id="admin-trainings"></tbody>
+         </table>
+      </div>
+   </section>
+
+   <section class="dog-profile admin-section" aria-labelledby="notes-admin-heading">
+      <h2 id="notes-admin-heading">Trainingsnotizen</h2>
+      <div class="admin-table-wrap">
+         <table class="admin-table">
+            <thead><tr><th>Datum</th><th>Hund / Trick</th><th>Autor</th><th>Notiz</th><th>Aktion</th></tr></thead>
+            <tbody id="admin-notes"></tbody>
+         </table>
+      </div>
    </section>
 </main>
 
 <%- include('../partials/footer') %>
 <script type="module" src="/js/auth/logout-button.js"></script>
+<script type="module" src="/js/admin/admin-page.js"></script>
 </body>
 </html>
-
-
-
