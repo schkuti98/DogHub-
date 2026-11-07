@@ -59,11 +59,11 @@ router.post('/login', async (req, res, next) => {
       const user = await User.findOne({ email });
 
       if (!user) {
-         return res.status(404).json({ message: 'Kein Konto gefunden. Bitte zuerst registrieren.' });
+         return res.status(401).json({ message: 'Ungültige Anmeldedaten.' });
       }
 
       if (!verifyPassword(password, user.passwordHash)) {
-         return res.status(401).json({ message: 'Passwort ist falsch.' });
+         return res.status(401).json({ message: 'Ungültige Anmeldedaten.' });
       }
 
       user.lastLoginAt = new Date();

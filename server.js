@@ -1,10 +1,27 @@
 ﻿const path = require('path');
+const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
+
+const authLoginLimiter = rateLimit({
+   windowMs: 15 * 60 * 1000,
+   max: 10,
+   standardHeaders: true,
+   legacyHeaders: false,
+   message: { message: 'Zu viele Login-Versuche. Bitte später erneut versuchen.' }
+});
+
+const authRegisterLimiter = rateLimit({
+   windowMs: 60 * 60 * 1000,
+   max: 5,
+   standardHeaders: true,
+   legacyHeaders: false,
+   message: { message: 'Zu viele Registrierungen. Bitte später erneut versuchen.' }
+});
 
 const dogRoutes = require('./server/routes/dog');
 const authRoutes = require('./server/routes/auth');
@@ -24,6 +41,12 @@ app.use(express.static(path.join(__dirname, 'public'), { index: false }));
 
 // Auth-User früh am Request verfügbar machen
 app.use(attachAuthUser);
+
+// Brute-Force-Schutz auf Auth-Endpunkten
+app.use('/api/auth/login', authLoginLimiter);
+app.use('/api/auth/register', authRegisterLimiter);
+app.use('/auth/login', authLoginLimiter);
+app.use('/auth/register', authRegisterLimiter);
 
 // Neue API-Pfade
 app.use('/api/dogs', dogRoutes);

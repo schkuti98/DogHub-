@@ -1,10 +1,21 @@
-﻿const crypto = require('crypto');
+const crypto = require('crypto');
 const { User } = require('../models/user_model');
 
 const SESSION_COOKIE_NAME = 'dth_session';
 const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 12;
+const isProduction = process.env.NODE_ENV === 'production';
 const runtimeFallbackSecret = crypto.randomBytes(32).toString('hex');
-const SESSION_SECRET = process.env.SESSION_SECRET || runtimeFallbackSecret;
+const configuredSecret = process.env.SESSION_SECRET;
+
+if (!configuredSecret && isProduction) {
+   throw new Error('SESSION_SECRET fehlt in Production. Server wird aus Sicherheitsgr�nden nicht gestartet.');
+}
+
+if (!configuredSecret && !isProduction) {
+   console.warn('WARNUNG: SESSION_SECRET fehlt. Es wird ein tempor�res Dev-Secret verwendet.');
+}
+
+const SESSION_SECRET = configuredSecret || runtimeFallbackSecret;
 
 function base64UrlEncode(value) {
    return Buffer.from(value, 'utf8').toString('base64url');
@@ -61,7 +72,7 @@ function verifySessionToken(token) {
          return null;
       }
 
-      // Token-Lebensdauer prüfen
+      // Token-Lebensdauer pr�fen
       if (Date.now() - Number(payload.iat || 0) > SESSION_MAX_AGE_MS) {
          return null;
       }
@@ -96,14 +107,36 @@ function parseCookies(cookieHeader = '') {
 function setSessionCookie(res, user) {
    const token = createSessionToken(user);
    const maxAge = Math.floor(SESSION_MAX_AGE_MS / 1000);
-   res.setHeader('Set-Cookie', `${SESSION_COOKIE_NAME}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}`);
+   const sameSite = process.env.SESSION_SAME_SITE || 'Lax';
+
+   const cookieParts = [
+      `${SESSION_COOKIE_NAME}=${encodeURIComponent(token)}`,
+      'Path=/',
+      'HttpOnly',
+      `SameSite=${sameSite}`,
+      `Max-Age=${maxAge}`
+   ];
+
+   if (isProduction) {
+      cookieParts.push('Secure');
+   }
+
+   res.setHeader('Set-Cookie', cookieParts.join('; '));
 }
 
 function clearSessionCookie(res) {
-   res.setHeader('Set-Cookie', `${SESSION_COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`);
+   const sameSite = process.env.SESSION_SAME_SITE || 'Lax';
+
+   const cookieParts = [`${SESSION_COOKIE_NAME}=`, 'Path=/', 'HttpOnly', `SameSite=${sameSite}`, 'Max-Age=0'];
+
+   if (isProduction) {
+      cookieParts.push('Secure');
+   }
+
+   res.setHeader('Set-Cookie', cookieParts.join('; '));
 }
 
-// User aus Cookie ins Request-Objekt hängen
+// User aus Cookie ins Request-Objekt h�ngen
 function attachAuthUser(req, res, next) {
    const cookies = parseCookies(req.headers.cookie);
    const token = cookies[SESSION_COOKIE_NAME];
@@ -121,7 +154,7 @@ function requireAuthenticatedUser(req, res, next) {
    return next();
 }
 
-// Harte Admin-Sperre für geschützte Routen
+// Harte Admin-Sperre f�r gesch�tzte Routen
 async function requireAdmin(req, res, next) {
    if (!req.authUser) {
       return res.status(401).json({ message: 'Nicht angemeldet.' });
