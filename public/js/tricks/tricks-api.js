@@ -17,6 +17,8 @@ function mapTrickFromApi(apiTrick) {
          any: (apiTrick.prerequisiteAny || []).map((id) => String(id))
       },
       steps: apiTrick.steps || [],
+      imageUrl: apiTrick.imageUrl || null,
+      videoUrl: apiTrick.videoUrl || null,
       categoryName,
       difficulty: apiTrick.difficulty
    };

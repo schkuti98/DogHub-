@@ -55,6 +55,7 @@ function renderTrickOverview({ trickMap, statuses, hasDog }) {
             aria-disabled="${isLocked ? 'true' : 'false'}"
             tabindex="${isLocked ? '-1' : '0'}"
          >
+            ${trick.imageUrl ? `<img class="trick-card-image" src="${trick.imageUrl}" alt="Beispielbild für ${trick.name}" loading="lazy">` : ''}
             <span class="difficulty-badge">${trick.levelLabel}</span>
             <h3>${trick.name}</h3>
             <p>${trick.description}</p>

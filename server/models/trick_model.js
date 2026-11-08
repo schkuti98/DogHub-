@@ -39,6 +39,19 @@ const trickSchema = new mongoose.Schema(
             text: { type: String, required: true, trim: true, maxlength: 1000 }
          }
       ],
+      imageId: {
+         type: mongoose.Schema.Types.ObjectId,
+         default: null
+      },
+      imageContentType: {
+         type: String,
+         default: null
+      },
+      videoUrl: {
+         type: String,
+         default: null,
+         maxlength: 500
+      },
       prerequisiteAll: [
          // Diese Tricks müssen alle geschafft sein
          {

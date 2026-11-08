@@ -16,14 +16,8 @@ router.get('/overview', async (req, res, next) => {
    try {
       const [users, dogs, tricks, categories, trainings, notes] = await Promise.all([
          User.find({}, 'email role createdAt lastLoginAt').sort({ createdAt: -1 }).lean(),
-         Dog.find({})
-            .populate({ path: 'trainerUserId', select: 'email' })
-            .sort({ createdAt: -1 })
-            .lean(),
-         Trick.find({})
-            .populate({ path: 'categoryId', select: 'name' })
-            .sort({ createdAt: 1 })
-            .lean(),
+         Dog.find({}).populate({ path: 'trainerUserId', select: 'email' }).sort({ createdAt: -1 }).lean(),
+         Trick.find({}).populate({ path: 'categoryId', select: 'name' }).sort({ createdAt: 1 }).lean(),
          Category.find({}).sort({ sortOrder: 1, name: 1 }).lean(),
          Training.find({})
             .populate({ path: 'dogId', select: 'id name' })
@@ -50,9 +44,7 @@ router.get('/overview', async (req, res, next) => {
             ...trick,
             id: String(trick._id),
             _id: undefined,
-            category: trick.categoryId
-               ? { id: String(trick.categoryId._id), name: trick.categoryId.name }
-               : null,
+            category: trick.categoryId ? { id: String(trick.categoryId._id), name: trick.categoryId.name } : null,
             categoryId: trick.categoryId ? String(trick.categoryId._id) : ''
          })),
          categories: categories.map((category) => ({
@@ -178,7 +170,7 @@ router.put('/trainings/:id', async (req, res, next) => {
       }
 
       training.status = status;
-      training.completedAt = status === 'done' ? (training.completedAt || new Date()) : null;
+      training.completedAt = status === 'done' ? training.completedAt || new Date() : null;
       if (status === 'unlocked' && !training.unlockedAt) {
          training.unlockedAt = new Date();
       }

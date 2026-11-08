@@ -44,6 +44,23 @@ async function requestJson(url, options = {}) {
    return payload;
 }
 
+async function uploadTrickImage(trickId, image) {
+   const formData = new FormData();
+   formData.append('image', image);
+
+   const response = await fetch(`/api/tricks/${encodeURIComponent(trickId)}/image`, {
+      method: 'POST',
+      body: formData
+   });
+   const payload = await response.json().catch(() => ({}));
+
+   if (!response.ok) {
+      throw new Error(payload.message || 'Das Trickbild konnte nicht gespeichert werden.');
+   }
+
+   return payload;
+}
+
 function formatDate(value) {
    if (!value) return '—';
    const date = new Date(value);
@@ -174,7 +191,8 @@ function trickPayload() {
       difficulty: trickForm.elements.difficulty.value,
       prerequisiteAll: selectedValues(trickForm.elements.prerequisiteAll),
       prerequisiteAny: selectedValues(trickForm.elements.prerequisiteAny),
-      steps: trickForm.elements.steps.value.split(/\r?\n/).map((step) => step.trim()).filter(Boolean)
+      steps: trickForm.elements.steps.value.split(/\r?\n/).map((step) => step.trim()).filter(Boolean),
+      videoUrl: trickForm.elements.videoUrl.value.trim()
    };
 }
 
@@ -182,6 +200,8 @@ function resetTrickForm() {
    trickForm.reset();
    trickForm.elements.trickId.value = '';
    trickForm.elements.categoryId.selectedIndex = overview.categories.length ? 0 : -1;
+   trickForm.elements.videoUrl.value = '';
+   trickForm.elements.image.value = '';
    document.getElementById('admin-trick-save').textContent = 'Trick anlegen';
    document.getElementById('admin-trick-cancel').hidden = true;
 }
@@ -189,12 +209,19 @@ function resetTrickForm() {
 trickForm.addEventListener('submit', async (event) => {
    event.preventDefault();
    const trickId = trickForm.elements.trickId.value;
+   const image = trickForm.elements.image.files[0];
 
    try {
-      await requestJson(trickId ? `/api/tricks/${encodeURIComponent(trickId)}` : '/api/tricks', {
+      const response = await requestJson(trickId ? `/api/tricks/${encodeURIComponent(trickId)}` : '/api/tricks', {
          method: trickId ? 'PUT' : 'POST',
          body: JSON.stringify(trickPayload())
       });
+
+      const savedTrickId = trickId || response.trick.id;
+      if (image) {
+         await uploadTrickImage(savedTrickId, image);
+      }
+
       setMessage(trickId ? 'Trick gespeichert.' : 'Trick angelegt.');
       await loadOverview();
       resetTrickForm();
@@ -217,6 +244,8 @@ document.addEventListener('click', async (event) => {
          trickForm.elements.trickId.value = trick.id;
          trickForm.elements.name.value = trick.name;
          trickForm.elements.description.value = trick.description;
+         trickForm.elements.videoUrl.value = trick.videoUrl || '';
+         trickForm.elements.image.value = '';
          trickForm.elements.categoryId.value = trick.categoryId;
          trickForm.elements.difficulty.value = trick.difficulty;
          setOptions(trickForm.elements.prerequisiteAll,

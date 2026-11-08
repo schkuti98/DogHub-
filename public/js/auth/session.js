@@ -30,28 +30,8 @@ function redirectToLogin() {
 
 // Prüft, ob ein Benutzer serverseitig wirklich angemeldet ist
 export async function requireAuth() {
-   const rawUser = getStoredCurrentUserRaw();
-
-   if (!rawUser) {
-      redirectToLogin();
-      return;
-   }
-
    try {
-      const currentUser = JSON.parse(rawUser);
-      if (!currentUser) {
-         clearCurrentUserStorage();
-         redirectToLogin();
-         return;
-      }
-   } catch {
-      clearCurrentUserStorage();
-      redirectToLogin();
-      return;
-   }
-
-   try {
-      const response = await fetch('/auth/session');
+      const response = await fetch('/auth/session', { cache: 'no-store' });
 
       if (!response.ok) {
          clearCurrentUserStorage();
@@ -60,6 +40,12 @@ export async function requireAuth() {
       }
 
       const data = await response.json();
+      if (!data?.user) {
+         clearCurrentUserStorage();
+         redirectToLogin();
+         return;
+      }
+
       const normalized = JSON.stringify(data.user);
 
       if (localStorage.getItem(CURRENT_USER_KEY)) {

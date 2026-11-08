@@ -8,11 +8,11 @@ const runtimeFallbackSecret = crypto.randomBytes(32).toString('hex');
 const configuredSecret = process.env.SESSION_SECRET;
 
 if (!configuredSecret && isProduction) {
-   throw new Error('SESSION_SECRET fehlt in Production. Server wird aus Sicherheitsgr�nden nicht gestartet.');
+   throw new Error('SESSION_SECRET fehlt in Production. Server wird aus Sicherheitsgründen nicht gestartet.');
 }
 
 if (!configuredSecret && !isProduction) {
-   console.warn('WARNUNG: SESSION_SECRET fehlt. Es wird ein tempor�res Dev-Secret verwendet.');
+   console.warn('WARNUNG: SESSION_SECRET fehlt. Es wird ein temporäres Dev-Secret verwendet.');
 }
 
 const SESSION_SECRET = configuredSecret || runtimeFallbackSecret;
@@ -72,7 +72,7 @@ function verifySessionToken(token) {
          return null;
       }
 
-      // Token-Lebensdauer pr�fen
+      // Token-Lebensdauer prüfen
       if (Date.now() - Number(payload.iat || 0) > SESSION_MAX_AGE_MS) {
          return null;
       }
@@ -136,7 +136,7 @@ function clearSessionCookie(res) {
    res.setHeader('Set-Cookie', cookieParts.join('; '));
 }
 
-// User aus Cookie ins Request-Objekt h�ngen
+// User aus Cookie ins Request-Objekt hängen
 function attachAuthUser(req, res, next) {
    const cookies = parseCookies(req.headers.cookie);
    const token = cookies[SESSION_COOKIE_NAME];
@@ -154,7 +154,7 @@ function requireAuthenticatedUser(req, res, next) {
    return next();
 }
 
-// Harte Admin-Sperre f�r gesch�tzte Routen
+// Harte Admin-Sperre für geschützte Routen
 async function requireAdmin(req, res, next) {
    if (!req.authUser) {
       return res.status(401).json({ message: 'Nicht angemeldet.' });

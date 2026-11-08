@@ -1,12 +1,91 @@
 ﻿const express = require('express');
 const mongoose = require('mongoose');
+const multer = require('multer');
+const { randomUUID } = require('crypto');
 const { requireAuthenticatedUser, requireAdmin } = require('../middleware/session_auth');
 const { Trick } = require('../models/trick_model');
 const { Category } = require('../models/category_model');
+const { getTrickImageBucket, uploadTrickImage, deleteTrickImage } = require('../database/gridfs');
 
 const router = express.Router();
 
 router.use(requireAuthenticatedUser);
+
+const MAX_TRICK_IMAGE_SIZE = 8 * 1024 * 1024;
+const TRICK_IMAGE_TYPES = new Map([
+   ['image/jpeg', 'jpg'],
+   ['image/png', 'png'],
+   ['image/webp', 'webp']
+]);
+const trickImageUpload = multer({
+   storage: multer.memoryStorage(),
+   limits: { fileSize: MAX_TRICK_IMAGE_SIZE, files: 1 },
+   fileFilter: (req, file, callback) => {
+      if (!TRICK_IMAGE_TYPES.has(file.mimetype)) {
+         callback(new Error('Nur JPG-, PNG- und WebP-Bilder sind erlaubt.'));
+         return;
+      }
+      callback(null, true);
+   }
+});
+
+function parseTrickImage(req, res, next) {
+   trickImageUpload.single('image')(req, res, (error) => {
+      if (!error) return next();
+
+      if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {
+         return res.status(413).json({ message: 'Das Trickbild darf höchstens 8 MB groß sein.' });
+      }
+
+      return res.status(400).json({ message: error.message || 'Das Trickbild konnte nicht gelesen werden.' });
+   });
+}
+
+function getImageContentType(buffer) {
+   if (buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) return 'image/jpeg';
+   if (buffer.subarray(0, 8).toString('hex') === '89504e470d0a1a0a') return 'image/png';
+   if (
+      buffer.length >= 12 &&
+      buffer.toString('ascii', 0, 4) === 'RIFF' &&
+      buffer.toString('ascii', 8, 12) === 'WEBP'
+   ) return 'image/webp';
+   return null;
+}
+
+function normalizeVideoUrl(value) {
+   if (value === undefined || value === null || value === '') return { videoUrl: null };
+   if (typeof value !== 'string' || value.trim().length > 500) {
+      return { error: 'Der Video-Link darf höchstens 500 Zeichen lang sein.' };
+   }
+
+   let url;
+   try {
+      url = new URL(value.trim());
+   } catch {
+      return { error: 'Bitte gib einen gültigen YouTube- oder Vimeo-Link ein.' };
+   }
+
+   if (url.protocol !== 'https:') {
+      return { error: 'Der Video-Link muss mit https:// beginnen.' };
+   }
+
+   const hostname = url.hostname.toLowerCase().replace(/^www\./, '');
+   const allowed = ['youtube.com', 'youtu.be', 'youtube-nocookie.com', 'vimeo.com', 'player.vimeo.com'];
+   if (!allowed.includes(hostname)) {
+      return { error: 'Nur YouTube- und Vimeo-Links sind erlaubt.' };
+   }
+
+   const pathParts = url.pathname.split('/').filter(Boolean);
+   const videoId = hostname === 'youtube.com' || hostname === 'youtube-nocookie.com'
+      ? url.searchParams.get('v') || pathParts[pathParts.length - 1]
+      : pathParts[pathParts.length - 1];
+
+   if (!videoId || !/^[A-Za-z0-9_-]+$/.test(videoId) || (hostname.includes('vimeo') && !/^\d+$/.test(videoId))) {
+      return { error: 'Der Video-Link enthält keine gültige Video-ID.' };
+   }
+
+   return { videoUrl: url.toString() };
+}
 
 function toClientTrick(trickDoc) {
    return {
@@ -25,6 +104,10 @@ function toClientTrick(trickDoc) {
          .slice()
          .sort((a, b) => a.order - b.order)
          .map((step) => step.text),
+      imageUrl: trickDoc.imageId
+         ? `/api/tricks/${String(trickDoc._id)}/image?v=${String(trickDoc.imageId)}`
+         : null,
+      videoUrl: trickDoc.videoUrl || null,
       prerequisiteAll: (trickDoc.prerequisiteAll || []).map((id) => String(id)),
       prerequisiteAny: (trickDoc.prerequisiteAny || []).map((id) => String(id)),
       isActive: trickDoc.isActive
@@ -101,6 +184,11 @@ router.post('/', requireAdmin, async (req, res, next) => {
       const description = typeof req.body.description === 'string' ? req.body.description.trim() : '';
       const difficulty = typeof req.body.difficulty === 'string' ? req.body.difficulty.trim().toLowerCase() : '';
       const categoryId = String(req.body.categoryId || '');
+      const videoCheck = normalizeVideoUrl(req.body.videoUrl);
+
+      if (videoCheck.error) {
+         return res.status(400).json({ message: videoCheck.error });
+      }
 
       if (!name || name.length > 100) {
          return res.status(400).json({ message: 'Name ist erforderlich (max. 100 Zeichen).' });
@@ -143,6 +231,7 @@ router.post('/', requireAdmin, async (req, res, next) => {
          description,
          categoryId,
          difficulty,
+         videoUrl: videoCheck.videoUrl,
          steps: stepsCheck.steps,
          prerequisiteAll,
          prerequisiteAny,
@@ -160,6 +249,100 @@ router.post('/', requireAdmin, async (req, res, next) => {
    } catch (error) {
       if (error?.code === 11000) {
          return res.status(409).json({ message: 'Ein Trick mit diesem Namen existiert bereits in der Kategorie.' });
+      }
+      return next(error);
+   }
+});
+
+router.get('/:id/image', async (req, res, next) => {
+   try {
+      if (!mongoose.isValidObjectId(req.params.id)) {
+         return res.status(400).json({ message: 'Ungültige Trick-ID.' });
+      }
+
+      const trick = await Trick.findById(req.params.id).select('imageId').lean();
+      if (!trick) return res.status(404).json({ message: 'Trick nicht gefunden.' });
+      if (!trick.imageId) return res.status(404).json({ message: 'Für diesen Trick ist kein Bild gespeichert.' });
+
+      const bucket = getTrickImageBucket();
+      const [file] = await bucket.find({ _id: trick.imageId }).limit(1).toArray();
+      if (!file) return res.status(404).json({ message: 'Das Trickbild wurde nicht gefunden.' });
+
+      res.set({
+         'Content-Type': file.contentType || 'application/octet-stream',
+         'Cache-Control': 'private, max-age=86400, immutable',
+         'X-Content-Type-Options': 'nosniff'
+      });
+
+      const downloadStream = bucket.openDownloadStream(trick.imageId);
+      downloadStream.once('error', (error) => {
+         if (res.headersSent) {
+            res.destroy(error);
+            return;
+         }
+         next(error);
+      });
+      return downloadStream.pipe(res);
+   } catch (error) {
+      return next(error);
+   }
+});
+
+router.post('/:id/image', requireAdmin, parseTrickImage, async (req, res, next) => {
+   let uploadedImageId;
+   try {
+      if (!mongoose.isValidObjectId(req.params.id)) {
+         return res.status(400).json({ message: 'Ungültige Trick-ID.' });
+      }
+      if (!req.file) {
+         return res.status(400).json({ message: 'Bitte wähle ein Bild aus.' });
+      }
+
+      const contentType = getImageContentType(req.file.buffer);
+      if (!contentType || contentType !== req.file.mimetype) {
+         return res.status(400).json({ message: 'Die Datei ist kein gültiges JPG-, PNG- oder WebP-Bild.' });
+      }
+
+      const trick = await Trick.findById(req.params.id);
+      if (!trick) return res.status(404).json({ message: 'Trick nicht gefunden.' });
+
+      const extension = TRICK_IMAGE_TYPES.get(contentType);
+      uploadedImageId = await uploadTrickImage({
+         buffer: req.file.buffer,
+         filename: `${randomUUID()}.${extension}`,
+         contentType,
+         trickId: trick._id,
+         ownerId: req.authUser.uid
+      });
+
+      const previousImageId = trick.imageId;
+      trick.imageId = uploadedImageId;
+      trick.imageContentType = contentType;
+      await trick.save();
+      uploadedImageId = null;
+
+      let warning;
+      if (previousImageId) {
+         try {
+            await deleteTrickImage(previousImageId);
+         } catch (error) {
+            console.error('Das vorherige Trickbild konnte nicht aus MongoDB entfernt werden:', error);
+            warning = 'Das vorherige Bild konnte nicht aus MongoDB entfernt werden.';
+         }
+      }
+
+      return res.json({
+         message: 'Trickbild gespeichert.',
+         warning,
+         imageUrl: `/api/tricks/${trick._id}/image?v=${String(trick.imageId)}`
+      });
+   } catch (error) {
+      if (uploadedImageId) {
+         try {
+            await deleteTrickImage(uploadedImageId);
+         } catch (cleanupError) {
+            console.error('Das nicht zugeordnete Trickbild konnte nicht aus GridFS gelöscht werden:', cleanupError);
+         }
       }
       return next(error);
    }
@@ -199,6 +382,14 @@ router.put('/:id', requireAdmin, async (req, res, next) => {
       }
 
       const updateData = {};
+
+      if (req.body.videoUrl !== undefined) {
+         const videoCheck = normalizeVideoUrl(req.body.videoUrl);
+         if (videoCheck.error) {
+            return res.status(400).json({ message: videoCheck.error });
+         }
+         updateData.videoUrl = videoCheck.videoUrl;
+      }
 
       if (typeof req.body.name === 'string') {
          const name = req.body.name.trim();

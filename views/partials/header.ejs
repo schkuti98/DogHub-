@@ -18,5 +18,10 @@ const cssList = Array.isArray(typeof extraCss !== 'undefined' ? extraCss : null)
       <% } %>
       <%# Basis-Styles für die ganze App %>
       <link rel="stylesheet" href="/css/style.css" />
+      <link rel="manifest" href="/manifest.webmanifest" />
+      <link rel="icon" href="/icons/icon-192.png" type="image/png" />
+      <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+      <meta name="theme-color" content="#1e3b2f" />
+      <script src="/js/pwa.js" defer></script>
    </head>
    <body class="<%= pageBodyClass %>">

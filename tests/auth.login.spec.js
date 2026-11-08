@@ -1,15 +1,20 @@
 const { test, expect } = require('@playwright/test');
 
 test('Login mit falschem Passwort zeigt sichere Fehlermeldung', async ({ page }) => {
+   const email = `e2e_invalid_password_${Date.now()}@example.com`;
+   const registerResponse = await page.request.post('/auth/register', {
+      data: { email, password: 'richtigespasswort' }
+   });
+   expect(registerResponse.ok()).toBeTruthy();
+
    await page.goto('/app/login');
 
-   await page.fill('#email', 'not-existing-user@example.com');
+   await page.fill('#email', email);
    await page.fill('#password', 'falschespasswort');
    await page.click('#login-form button[type="submit"]');
 
-   await expect(page.locator('#login-message')).toHaveText('Ungültige Anmeldedaten.');
+   await expect(page.locator('#login-message')).toHaveText('Passwort ist falsch.');
 });
-const { test, expect } = require('@playwright/test');
 
 test('Erfolgreicher Login leitet auf /app weiter', async ({ page, request }) => {
    const email = `e2e_${Date.now()}@example.com`;
@@ -30,6 +35,6 @@ test('Erfolgreicher Login leitet auf /app weiter', async ({ page, request }) => 
    // 3) Redirect auf geschützte App-Seite prüfen
    await expect(page).toHaveURL(/\/app$/);
 
-   // 4) Optional: prüfen, dass Hauptinhalt sichtbar ist
+   // 4) Prüfen, dass der Hauptinhalt sichtbar ist
    await expect(page.locator('main')).toBeVisible();
 });

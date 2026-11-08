@@ -40,6 +40,12 @@
          <label class="admin-wide">Anleitung (ein Schritt pro Zeile)
             <textarea name="steps" rows="5"></textarea>
          </label>
+         <label class="admin-wide">YouTube- oder Vimeo-Link
+            <input name="videoUrl" type="url" maxlength="500" placeholder="https://www.youtube.com/watch?v=...">
+         </label>
+         <label class="admin-wide">Trickbild (JPG, PNG oder WebP, max. 8 MB)
+            <input name="image" type="file" accept="image/jpeg,image/png,image/webp">
+         </label>
          <div class="admin-form-actions admin-wide">
             <button class="start-button" type="submit" id="admin-trick-save">Trick anlegen</button>
             <button class="admin-secondary-button" type="button" id="admin-trick-cancel" hidden>Bearbeitung abbrechen</button>

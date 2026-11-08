@@ -6,6 +6,53 @@ import { formatRequiredTricks } from './trick-utils.js';
 
 const trickDetailContainer = document.getElementById('trick-detail');
 
+function escapeHtml(value) {
+   return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+   })[character]);
+}
+
+function getVideoEmbedUrl(value) {
+   if (!value) return null;
+
+   try {
+      const url = new URL(value);
+      const hostname = url.hostname.toLowerCase().replace(/^www\./, '');
+      let videoId = '';
+
+      if (hostname === 'youtube.com' || hostname === 'youtube-nocookie.com') {
+         videoId = url.searchParams.get('v') || url.pathname.split('/').filter(Boolean).pop() || '';
+      } else if (hostname === 'youtu.be' || hostname === 'vimeo.com' || hostname === 'player.vimeo.com') {
+         videoId = url.pathname.split('/').filter(Boolean).pop() || '';
+      }
+
+      if (!videoId || !/^[A-Za-z0-9_-]+$/.test(videoId)) return null;
+      if (hostname.includes('youtube') || hostname === 'youtu.be') {
+         return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}`;
+      }
+      return `https://player.vimeo.com/video/${encodeURIComponent(videoId)}`;
+   } catch {
+      return null;
+   }
+}
+
+function renderTrickMedia(trick) {
+   const image = trick.imageUrl
+      ? `<img class="trick-media-image" src="${escapeHtml(trick.imageUrl)}" alt="Beispielbild für ${escapeHtml(trick.name)}">`
+      : '';
+   const embedUrl = getVideoEmbedUrl(trick.videoUrl);
+   const video = embedUrl
+      ? `<div class="trick-media-video"><iframe src="${escapeHtml(embedUrl)}" title="Video zu ${escapeHtml(trick.name)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`
+      : '';
+
+   if (!image && !video) return '';
+   return `<div class="trick-media">${image}${video}</div>`;
+}
+
 function mapDogsToOptions(dogs, selectedDogId) {
    return dogs
       .map((dog) => {
@@ -68,8 +115,9 @@ function renderTrickDetail({ trickId, trick, trickMap, dogs, selectedDogId, done
 
    trickDetailContainer.innerHTML = `
       <span class="difficulty-badge">${trick.levelLabel}</span>
-      <h2>${trick.name}</h2>
-      <p>${trick.description}</p>
+      <h2>${escapeHtml(trick.name)}</h2>
+      <p>${escapeHtml(trick.description)}</p>
+      ${renderTrickMedia(trick)}
       <p><strong>Vorher lernen:</strong> ${requiredText}</p>
 
       <h3>Anleitung</h3>
